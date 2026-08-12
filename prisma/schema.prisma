@@ -1,0 +1,636 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../lib/generated/prisma"
+  moduleFormat = "esm"
+  runtime      = "nodejs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+  DELETED
+}
+
+enum CardType {
+  CREDIT
+  DEBIT
+  PREPAID
+}
+
+enum CardBrand {
+  VISA
+  MASTERCARD
+  AMEX
+  OTHER
+}
+
+enum TransactionSource {
+  MANUAL
+  WHATSAPP
+  RECEIPT
+  EMAIL
+  IMPORT
+  API
+}
+
+enum TransactionStatus {
+  PENDING_CONFIRMATION
+  CONFIRMED
+  REJECTED
+  DELETED
+}
+
+enum IngestionChannel {
+  APP
+  WHATSAPP
+  EMAIL
+  ADMIN
+}
+
+enum IngestionInputType {
+  TEXT
+  IMAGE
+  PDF
+  AUDIO
+  CSV
+  API
+}
+
+enum IngestionStatus {
+  RECEIVED
+  PROCESSING
+  NEEDS_CONFIRMATION
+  PROCESSED
+  FAILED
+}
+
+enum BudgetType {
+  MONTHLY_TOTAL
+  CATEGORY
+  CARD
+  ESSENTIAL
+  DISCRETIONARY
+}
+
+enum SubscriptionFrequency {
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  SUSPECTED
+  ACTIVE
+  DISMISSED
+  CANCELLED
+}
+
+enum PromotionBenefitType {
+  DISCOUNT
+  CASHBACK
+  INSTALLMENTS
+  TWO_FOR_ONE
+  FIXED_AMOUNT
+}
+
+enum PromotionStatus {
+  ACTIVE
+  EXPIRED
+  DISABLED
+  DRAFT
+}
+
+enum ScraperRunStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+enum RecommendationType {
+  BUDGET_ALERT
+  PROMO_MATCH
+  HABIT_CHANGE
+  SUBSCRIPTION
+  CHEAPER_OPTION
+  DUPLICATE_TRANSACTION
+}
+
+enum RecommendationStatus {
+  NEW
+  VIEWED
+  APPLIED
+  DISMISSED
+}
+
+enum NotificationChannel {
+  PUSH
+  WHATSAPP
+  EMAIL
+}
+
+enum NotificationStatus {
+  QUEUED
+  SENT
+  FAILED
+  SKIPPED
+}
+
+enum LocationSource {
+  APP
+  WHATSAPP
+  MAPS
+  SCRAPER
+  MANUAL
+}
+
+enum GroupRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum MemberStatus {
+  INVITED
+  ACTIVE
+  REMOVED
+}
+
+enum SplitMethod {
+  EQUAL
+  PERCENTAGE
+  AMOUNT
+  SHARES
+}
+
+model User {
+  id                String                 @id @default(uuid()) @db.Uuid
+  email             String                 @unique @map("correo")
+  passwordHash      String?                @map("hash_contrasena")
+  fullName          String                 @map("nombre_completo")
+  phoneE164         String?                @unique @map("telefono_e164")
+  country           String                 @default("AR") @map("pais")
+  currency          String                 @default("ARS") @map("moneda")
+  timezone          String                 @default("America/Argentina/Buenos_Aires") @map("zona_horaria")
+  status            UserStatus             @default(ACTIVE) @map("estado")
+  createdAt         DateTime               @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt         DateTime               @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  deletedAt         DateTime?              @map("eliminado_en") @db.Timestamptz(6)
+  budgets           Budget[]
+  cards             Card[]
+  groupMemberships  GroupMember[]
+  groupsOwned       Group[]                @relation("GroupOwner")
+  ingestionJobs     IngestionJob[]
+  locationSnapshots UserLocationSnapshot[]
+  notifications     Notification[]
+  preferences       UserPreference?
+  recommendations   Recommendation[]
+  sharedPaid        SharedExpense[]        @relation("SharedExpensePayer")
+  subscriptions     Subscription[]
+  transactions      Transaction[]
+  whatsappAccounts  WhatsAppAccount[]
+
+  @@index([status, createdAt])
+  @@map("usuarios")
+}
+
+model UserPreference {
+  id                         String   @id @default(uuid()) @db.Uuid
+  userId                     String   @unique @map("usuario_id") @db.Uuid
+  notificationChannels       String[] @default(["push"]) @map("canales_notificacion")
+  alertThresholdPercent      Int      @default(85) @map("porcentaje_umbral_alerta")
+  locationPromosEnabled      Boolean  @default(false) @map("promos_ubicacion_activadas")
+  patternAlertsEnabled       Boolean  @default(true) @map("alertas_patron_activadas")
+  duplicateDetectionEnabled  Boolean  @default(true) @map("deteccion_duplicados_activada")
+  whatsappIngestionEnabled   Boolean  @default(false) @map("ingesta_whatsapp_activada")
+  whatsappConfirmEveryCharge Boolean  @default(true) @map("confirmar_cada_gasto_whatsapp")
+  dataRetentionDays          Int?     @map("dias_retencion_datos")
+  createdAt                  DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt                  DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  user                       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("preferencias_usuario")
+}
+
+model WhatsAppAccount {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String?   @map("usuario_id") @db.Uuid
+  provider       String    @default("meta") @map("proveedor")
+  phoneE164      String    @map("telefono_e164")
+  providerUserId String?   @map("usuario_proveedor_id")
+  displayName    String?   @map("nombre_visible")
+  isVerified     Boolean   @default(false) @map("verificada")
+  linkedAt       DateTime? @map("vinculada_en") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt      DateTime  @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([provider, phoneE164])
+  @@index([userId])
+  @@map("cuentas_whatsapp")
+}
+
+model Card {
+  id               String         @id @default(uuid()) @db.Uuid
+  userId           String         @map("usuario_id") @db.Uuid
+  issuerBank       String         @map("banco_emisor")
+  brand            CardBrand      @map("marca")
+  cardType         CardType       @map("tipo_tarjeta")
+  lastFour         String         @map("ultimos_cuatro")
+  alias            String
+  creditLimitCents BigInt?        @map("limite_credito_centavos")
+  active           Boolean        @default(true) @map("activa")
+  createdAt        DateTime       @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt        DateTime       @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  budgets          Budget[]
+  subscriptions    Subscription[]
+  transactions     Transaction[]
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, issuerBank, brand, lastFour])
+  @@index([userId, active])
+  @@map("tarjetas")
+}
+
+model Category {
+  id               String        @id @default(uuid()) @db.Uuid
+  userId           String?       @map("usuario_id") @db.Uuid
+  key              String        @unique @map("clave")
+  name             String        @map("nombre")
+  color            String
+  icon             String        @map("icono")
+  isEssential      Boolean       @default(false) @map("es_esencial")
+  parentId         String?       @map("categoria_padre_id") @db.Uuid
+  active           Boolean       @default(true) @map("activa")
+  createdAt        DateTime      @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt        DateTime      @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  budgets          Budget[]
+  children         Category[]    @relation("CategoryTree")
+  defaultMerchants Merchant[]
+  parent           Category?     @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  promotions       Promotion[]
+  transactions     Transaction[]
+
+  @@index([userId, active])
+  @@map("categorias")
+}
+
+model Merchant {
+  id              String             @id @default(uuid()) @db.Uuid
+  name            String             @map("nombre")
+  slug            String             @unique @map("identificador")
+  rawNames        String[]           @default([]) @map("nombres_crudos")
+  categoryId      String?            @map("categoria_id") @db.Uuid
+  country         String             @default("AR") @map("pais")
+  websiteUrl      String?            @map("sitio_web_url")
+  source          String             @default("manual") @map("origen")
+  createdAt       DateTime           @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt       DateTime           @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  defaultCategory Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  locations       MerchantLocation[]
+  promotions      Promotion[]
+  subscriptions   Subscription[]
+  transactions    Transaction[]
+
+  @@index([categoryId])
+  @@map("comercios")
+}
+
+model MerchantLocation {
+  id              String         @id @default(uuid()) @db.Uuid
+  merchantId      String         @map("comercio_id") @db.Uuid
+  name            String?        @map("nombre")
+  country         String         @default("AR") @map("pais")
+  province        String?        @map("provincia")
+  city            String?        @map("ciudad")
+  addressLine     String?        @map("direccion")
+  latitude        Decimal?       @map("latitud") @db.Decimal(10, 7)
+  longitude       Decimal?       @map("longitud") @db.Decimal(10, 7)
+  geohash         String?
+  externalPlaceId String?        @map("lugar_externo_id")
+  source          LocationSource @default(MANUAL) @map("origen")
+  active          Boolean        @default(true) @map("activa")
+  createdAt       DateTime       @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt       DateTime       @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  merchant        Merchant       @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  promotions      Promotion[]
+  transactions    Transaction[]
+
+  @@index([merchantId, active])
+  @@index([latitude, longitude])
+  @@map("ubicaciones_comercios")
+}
+
+model Transaction {
+  id                 String            @id @default(uuid()) @db.Uuid
+  userId             String            @map("usuario_id") @db.Uuid
+  cardId             String?           @map("tarjeta_id") @db.Uuid
+  categoryId         String?           @map("categoria_id") @db.Uuid
+  merchantId         String?           @map("comercio_id") @db.Uuid
+  merchantLocationId String?           @map("ubicacion_comercio_id") @db.Uuid
+  ingestionJobId     String?           @unique @map("ingesta_id") @db.Uuid
+  amountCents        BigInt            @map("monto_centavos")
+  currency           String            @default("ARS") @map("moneda")
+  occurredAt         DateTime          @map("ocurrida_en") @db.Timestamptz(6)
+  description        String?           @map("descripcion")
+  notes              String?           @map("notas")
+  source             TransactionSource @map("origen")
+  status             TransactionStatus @default(CONFIRMED) @map("estado")
+  confidence         Decimal?          @map("confianza") @db.Decimal(5, 4)
+  duplicateOfId      String?           @map("duplicado_de_id") @db.Uuid
+  items              Json?
+  attachments        Json?             @map("adjuntos")
+  createdAt          DateTime          @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt          DateTime          @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  deletedAt          DateTime?         @map("eliminado_en") @db.Timestamptz(6)
+  budgets            Budget[]
+  card               Card?             @relation(fields: [cardId], references: [id], onDelete: SetNull)
+  category           Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  duplicateOf        Transaction?      @relation("TransactionDuplicate", fields: [duplicateOfId], references: [id], onDelete: SetNull)
+  duplicates         Transaction[]     @relation("TransactionDuplicate")
+  ingestionJob       IngestionJob?     @relation(fields: [ingestionJobId], references: [id], onDelete: SetNull)
+  merchant           Merchant?         @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+  merchantLocation   MerchantLocation? @relation(fields: [merchantLocationId], references: [id], onDelete: SetNull)
+  sharedExpense      SharedExpense?
+  subscriptions      Subscription[]
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, occurredAt])
+  @@index([userId, categoryId, occurredAt])
+  @@index([userId, cardId, occurredAt])
+  @@index([userId, merchantId, occurredAt])
+  @@index([status, createdAt])
+  @@map("transacciones")
+}
+
+model IngestionJob {
+  id                String             @id @default(uuid()) @db.Uuid
+  userId            String?            @map("usuario_id") @db.Uuid
+  channel           IngestionChannel   @map("canal")
+  inputType         IngestionInputType @map("tipo_entrada")
+  rawText           String?            @map("texto_crudo")
+  fileUrl           String?            @map("archivo_url")
+  rawPayload        Json?              @map("payload_crudo")
+  extractedPayload  Json?              @map("payload_extraido")
+  normalizedPayload Json?              @map("payload_normalizado")
+  modelName         String?            @map("modelo_nombre")
+  modelVersion      String?            @map("modelo_version")
+  modelConfidence   Decimal?           @map("modelo_confianza") @db.Decimal(5, 4)
+  status            IngestionStatus    @default(RECEIVED) @map("estado")
+  errorMessage      String?            @map("mensaje_error")
+  receivedAt        DateTime           @default(now()) @map("recibido_en") @db.Timestamptz(6)
+  createdAt         DateTime           @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt         DateTime           @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  processedAt       DateTime?          @map("procesado_en") @db.Timestamptz(6)
+  events            Json?              @map("eventos")
+  transaction       Transaction?
+  user              User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  @@map("ingestas")
+}
+
+model Budget {
+  id                    String       @id @default(uuid()) @db.Uuid
+  userId                String       @map("usuario_id") @db.Uuid
+  categoryId            String?      @map("categoria_id") @db.Uuid
+  cardId                String?      @map("tarjeta_id") @db.Uuid
+  transactionId         String?      @map("transaccion_id") @db.Uuid
+  budgetType            BudgetType   @map("tipo_presupuesto")
+  name                  String       @map("nombre")
+  period                String       @map("periodo")
+  limitCents            BigInt       @map("limite_centavos")
+  alertThresholdPercent Int          @default(85) @map("porcentaje_umbral_alerta")
+  active                Boolean      @default(true) @map("activo")
+  createdAt             DateTime     @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt             DateTime     @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  card                  Card?        @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  category              Category?    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  transaction           Transaction? @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, period, active])
+  @@index([userId, budgetType, period])
+  @@map("presupuestos")
+}
+
+model Subscription {
+  id             String                @id @default(uuid()) @db.Uuid
+  userId         String                @map("usuario_id") @db.Uuid
+  merchantId     String                @map("comercio_id") @db.Uuid
+  cardId         String?               @map("tarjeta_id") @db.Uuid
+  transactionId  String?               @map("transaccion_id") @db.Uuid
+  amountCents    BigInt                @map("monto_centavos")
+  currency       String                @default("ARS") @map("moneda")
+  frequency      SubscriptionFrequency @map("frecuencia")
+  nextExpectedAt DateTime              @map("proximo_esperado_en") @db.Date
+  status         SubscriptionStatus    @default(SUSPECTED) @map("estado")
+  confidence     Decimal?              @map("confianza") @db.Decimal(5, 4)
+  note           String?               @map("nota")
+  createdAt      DateTime              @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt      DateTime              @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  card           Card?                 @relation(fields: [cardId], references: [id], onDelete: SetNull)
+  merchant       Merchant              @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  transaction    Transaction?          @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+  user           User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([nextExpectedAt])
+  @@map("suscripciones")
+}
+
+model PromotionSource {
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String       @map("nombre")
+  sourceType  String       @default("scraper") @map("tipo_fuente")
+  baseUrl     String?      @map("url_base")
+  active      Boolean      @default(true) @map("activa")
+  createdAt   DateTime     @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt   DateTime     @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  promotions  Promotion[]
+  scraperRuns ScraperRun[]
+
+  @@unique([name, sourceType])
+  @@map("fuentes_promociones")
+}
+
+model ScraperRun {
+  id           String           @id @default(uuid()) @db.Uuid
+  sourceId     String           @map("fuente_id") @db.Uuid
+  status       ScraperRunStatus @default(RUNNING) @map("estado")
+  startedAt    DateTime         @default(now()) @map("iniciado_en") @db.Timestamptz(6)
+  finishedAt   DateTime?        @map("finalizado_en") @db.Timestamptz(6)
+  itemsFound   Int              @default(0) @map("elementos_encontrados")
+  itemsCreated Int              @default(0) @map("elementos_creados")
+  itemsUpdated Int              @default(0) @map("elementos_actualizados")
+  errorMessage String?          @map("mensaje_error")
+  rawSummary   Json?            @map("resumen_crudo")
+  source       PromotionSource  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId, startedAt])
+  @@index([status, startedAt])
+  @@map("ejecuciones_scraper")
+}
+
+model Promotion {
+  id                 String               @id @default(uuid()) @db.Uuid
+  sourceId           String?              @map("fuente_id") @db.Uuid
+  merchantId         String?              @map("comercio_id") @db.Uuid
+  merchantLocationId String?              @map("ubicacion_comercio_id") @db.Uuid
+  categoryId         String?              @map("categoria_id") @db.Uuid
+  title              String               @map("titulo")
+  issuerBank         String?              @map("banco_emisor")
+  cardBrand          CardBrand?           @map("marca_tarjeta")
+  cardType           CardType?            @map("tipo_tarjeta")
+  benefitType        PromotionBenefitType @map("tipo_beneficio")
+  benefitValue       Decimal?             @map("valor_beneficio") @db.Decimal(10, 2)
+  capCents           BigInt?              @map("tope_centavos")
+  minPurchaseCents   BigInt?              @map("compra_minima_centavos")
+  validFrom          DateTime             @map("valida_desde") @db.Date
+  validUntil         DateTime             @map("valida_hasta") @db.Date
+  weekdays           Int[]                @default([]) @map("dias_semana")
+  conditions         String?              @map("condiciones")
+  sourceUrl          String?              @map("origen_url")
+  externalId         String?              @map("externo_id")
+  rawPayload         Json?                @map("payload_crudo")
+  status             PromotionStatus      @default(ACTIVE) @map("estado")
+  createdAt          DateTime             @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt          DateTime             @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  category           Category?            @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  merchant           Merchant?            @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+  merchantLocation   MerchantLocation?    @relation(fields: [merchantLocationId], references: [id], onDelete: SetNull)
+  recommendations    Recommendation[]
+  source             PromotionSource?     @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  @@index([status, validUntil])
+  @@index([merchantId, status])
+  @@index([categoryId, status])
+  @@index([issuerBank, cardBrand, cardType])
+  @@map("promociones")
+}
+
+model Recommendation {
+  id                   String               @id @default(uuid()) @db.Uuid
+  userId               String               @map("usuario_id") @db.Uuid
+  promotionId          String?              @map("promocion_id") @db.Uuid
+  type                 RecommendationType   @map("tipo")
+  title                String               @map("titulo")
+  detail               String               @map("detalle")
+  estimatedSavingCents BigInt?              @map("ahorro_estimado_centavos")
+  score                Decimal              @default(0) @map("puntaje") @db.Decimal(8, 4)
+  status               RecommendationStatus @default(NEW) @map("estado")
+  metadata             Json?                @map("metadatos")
+  createdAt            DateTime             @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt            DateTime             @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  notifications        Notification[]
+  promotion            Promotion?           @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+  user                 User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, createdAt])
+  @@index([type, createdAt])
+  @@map("recomendaciones")
+}
+
+model Notification {
+  id                String              @id @default(uuid()) @db.Uuid
+  userId            String              @map("usuario_id") @db.Uuid
+  recommendationId  String?             @map("recomendacion_id") @db.Uuid
+  channel           NotificationChannel @map("canal")
+  status            NotificationStatus  @default(QUEUED) @map("estado")
+  title             String              @map("titulo")
+  body              String              @map("cuerpo")
+  providerMessageId String?             @map("mensaje_proveedor_id")
+  errorMessage      String?             @map("mensaje_error")
+  scheduledAt       DateTime?           @map("programada_en") @db.Timestamptz(6)
+  sentAt            DateTime?           @map("enviada_en") @db.Timestamptz(6)
+  createdAt         DateTime            @default(now()) @map("creado_en") @db.Timestamptz(6)
+  recommendation    Recommendation?     @relation(fields: [recommendationId], references: [id], onDelete: SetNull)
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, createdAt])
+  @@index([channel, status, scheduledAt])
+  @@map("notificaciones")
+}
+
+model UserLocationSnapshot {
+  id             String         @id @default(uuid()) @db.Uuid
+  userId         String         @map("usuario_id") @db.Uuid
+  latitude       Decimal        @map("latitud") @db.Decimal(10, 7)
+  longitude      Decimal        @map("longitud") @db.Decimal(10, 7)
+  accuracyMeters Int?           @map("precision_metros")
+  geohash        String?
+  city           String?        @map("ciudad")
+  source         LocationSource @default(APP) @map("origen")
+  capturedAt     DateTime       @default(now()) @map("capturada_en") @db.Timestamptz(6)
+  retentionUntil DateTime?      @map("retener_hasta") @db.Timestamptz(6)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, capturedAt])
+  @@index([latitude, longitude])
+  @@map("ubicaciones_usuario")
+}
+
+model Group {
+  id          String          @id @default(uuid()) @db.Uuid
+  ownerUserId String          @map("usuario_dueno_id") @db.Uuid
+  name        String          @map("nombre")
+  createdAt   DateTime        @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt   DateTime        @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  members     GroupMember[]
+  owner       User            @relation("GroupOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  expenses    SharedExpense[]
+
+  @@index([ownerUserId])
+  @@map("grupos")
+}
+
+model GroupMember {
+  id        String       @id @default(uuid()) @db.Uuid
+  groupId   String       @map("grupo_id") @db.Uuid
+  userId    String       @map("usuario_id") @db.Uuid
+  role      GroupRole    @default(MEMBER) @map("rol")
+  status    MemberStatus @default(INVITED) @map("estado")
+  createdAt DateTime     @default(now()) @map("creado_en") @db.Timestamptz(6)
+  group     Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId, groupId])
+  @@map("miembros_grupos")
+}
+
+model SharedExpense {
+  id            String               @id @default(uuid()) @db.Uuid
+  groupId       String               @map("grupo_id") @db.Uuid
+  transactionId String?              @unique @map("transaccion_id") @db.Uuid
+  paidByUserId  String               @map("pagado_por_usuario_id") @db.Uuid
+  splitMethod   SplitMethod          @default(EQUAL) @map("metodo_division")
+  createdAt     DateTime             @default(now()) @map("creado_en") @db.Timestamptz(6)
+  updatedAt     DateTime             @updatedAt @map("actualizado_en") @db.Timestamptz(6)
+  group         Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  paidBy        User                 @relation("SharedExpensePayer", fields: [paidByUserId], references: [id], onDelete: Cascade)
+  splits        SharedExpenseSplit[]
+  transaction   Transaction?         @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+
+  @@index([groupId, createdAt])
+  @@index([paidByUserId])
+  @@map("gastos_compartidos")
+}
+
+model SharedExpenseSplit {
+  id              String        @id @default(uuid()) @db.Uuid
+  sharedExpenseId String        @map("gasto_compartido_id") @db.Uuid
+  userId          String        @map("usuario_id") @db.Uuid
+  amountCents     BigInt        @map("monto_centavos")
+  percentage      Decimal?      @map("porcentaje") @db.Decimal(7, 4)
+  settledAt       DateTime?     @map("saldado_en") @db.Timestamptz(6)
+  sharedExpense   SharedExpense @relation(fields: [sharedExpenseId], references: [id], onDelete: Cascade)
+
+  @@unique([sharedExpenseId, userId])
+  @@index([userId])
+  @@map("divisiones_gastos_compartidos")
+}

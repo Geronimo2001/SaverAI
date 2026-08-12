@@ -200,13 +200,13 @@ export const monthNames = [
   "Diciembre",
 ] as const
 
-export function toLocalISODate(date: Date) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const day = String(date.getDate()).padStart(2, "0")
-
-  return `${year}-${month}-${day}`
-}
+export const budgetTypes: { type: BudgetType; label: string; detail: string }[] = [
+  { type: "monthly_total", label: "General mensual", detail: "Tope total de gasto del mes." },
+  { type: "category", label: "Por categoria", detail: "Limite para supermercado, comida, transporte u otra categoria." },
+  { type: "card", label: "Por tarjeta", detail: "Control de gasto por medio de pago." },
+  { type: "essential", label: "Esenciales", detail: "Servicios, salud, transporte y gastos necesarios." },
+  { type: "discretionary", label: "Variables", detail: "Comida afuera, cafe, compras y gastos reducibles." },
+]
 
 export function getCurrentMonthMeta(referenceDate = new Date()): CurrentMonthMeta {
   const year = referenceDate.getFullYear()
@@ -250,43 +250,13 @@ export function isFuturePeriodKey(periodKey: string, referenceDate = new Date())
   return periodDate > currentMonthStart
 }
 
-export function getPreviousMonthMeta(referenceDate = new Date()) {
-  return getCurrentMonthMeta(new Date(referenceDate.getFullYear(), referenceDate.getMonth() - 1, 1))
+export function toLocalISODate(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+
+  return `${year}-${month}-${day}`
 }
-
-export function buildCalendarDays(sourceTransactions: TransactionRecord[], referenceDate = new Date()) {
-  const { year, monthIndex, daysInMonth } = getCurrentMonthMeta(referenceDate)
-
-  return Array.from({ length: daysInMonth }, (_, index) => {
-    const day = index + 1
-    const dayTransactions = sourceTransactions.filter((transaction) => {
-      if (!transaction.date) return transaction.day === day
-
-      const [dateYear, dateMonth, dateDay] = transaction.date.split("-").map(Number)
-      return dateYear === year && dateMonth === monthIndex + 1 && dateDay === day
-    })
-    const amount = dayTransactions.reduce((total, transaction) => total + transaction.amount, 0)
-
-    return {
-      date: day,
-      amount,
-      transactions: dayTransactions.map((transaction) => ({
-        name: transaction.merchant,
-        amount: transaction.amount,
-        category: transaction.category,
-        card: transaction.card,
-      })),
-    }
-  })
-}
-
-export const budgetTypes: { type: BudgetType; label: string; detail: string }[] = [
-  { type: "monthly_total", label: "General mensual", detail: "Tope total de gasto del mes." },
-  { type: "category", label: "Por categoria", detail: "Limite para supermercado, comida, transporte u otra categoria." },
-  { type: "card", label: "Por tarjeta", detail: "Control de gasto por medio de pago." },
-  { type: "essential", label: "Esenciales", detail: "Servicios, salud, transporte y gastos necesarios." },
-  { type: "discretionary", label: "Variables", detail: "Comida afuera, cafe, compras y gastos reducibles." },
-]
 
 export function getCategory(categories: CategoryView[], key: string) {
   return (

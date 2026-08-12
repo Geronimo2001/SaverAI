@@ -1,8 +1,12 @@
 import { BottomNav } from "@/components/dashboard/bottom-nav"
-import { formatCurrency, nearbyPromos } from "@/lib/capsa-data"
+import { formatCurrency } from "@/lib/capsa-data"
+import { getCapsaDashboardData } from "@/lib/capsa-db"
 import { MapPin, Navigation, Sparkles } from "lucide-react"
 
-export default function CercaPage() {
+export const dynamic = "force-dynamic"
+
+export default async function CercaPage() {
+  const { nearbyPromos } = await getCapsaDashboardData()
   const bestPromo = nearbyPromos[0]
 
   return (
@@ -18,16 +22,18 @@ export default function CercaPage() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs text-muted-foreground">Mejor decision cercana</p>
-                <h2 className="mt-1 text-2xl font-semibold">{bestPromo.place}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{bestPromo.distance} · {bestPromo.category}</p>
+                <h2 className="mt-1 text-2xl font-semibold">{bestPromo?.place ?? "Sin promos activas"}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {bestPromo ? `${bestPromo.distance} · ${bestPromo.category}` : "La DB no tiene promociones vigentes para hoy."}
+                </p>
               </div>
               <span className="flex size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <MapPin className="size-6" />
               </span>
             </div>
             <div className="mt-4 rounded-lg bg-secondary p-3">
-              <p className="text-sm font-medium">{bestPromo.benefit} con {bestPromo.card}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{bestPromo.reason}</p>
+              <p className="text-sm font-medium">{bestPromo ? `${bestPromo.benefit} con ${bestPromo.card}` : "Sin recomendacion"}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{bestPromo?.reason ?? "Cargá promociones vigentes o corré el seed actualizado."}</p>
             </div>
           </div>
         </section>
@@ -63,6 +69,11 @@ export default function CercaPage() {
                 </div>
               </div>
             ))}
+            {nearbyPromos.length === 0 ? (
+              <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
+                No hay promociones vigentes en la base de datos para la fecha actual.
+              </div>
+            ) : null}
           </div>
         </section>
       </div>

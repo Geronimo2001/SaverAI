@@ -1,9 +1,18 @@
 import { BottomNav } from "@/components/dashboard/bottom-nav"
-import { formatCurrency, linkedCards, profileSettings, spendingSummary } from "@/lib/capsa-data"
+import { getWebIcon } from "@/components/dashboard/web-icon"
+import { formatCurrency } from "@/lib/capsa-data"
+import { getCapsaDashboardData } from "@/lib/capsa-db"
 import { CreditCard, SlidersHorizontal, Target } from "lucide-react"
 
-export default function PerfilPage() {
-  const PrivacyIcon = profileSettings.privacyIcon
+export const dynamic = "force-dynamic"
+
+export default async function PerfilPage() {
+  const { linkedCards, profileSettings, spendingSummary } = await getCapsaDashboardData()
+  const PrivacyIcon = getWebIcon(profileSettings.privacyIcon)
+  const budgetProgress =
+    profileSettings.monthlyBudget > 0
+      ? Math.round((spendingSummary.totalSpend / profileSettings.monthlyBudget) * 100)
+      : 0
 
   return (
     <main className="min-h-screen bg-background pb-28 text-foreground md:pb-10 md:pl-24">
@@ -40,7 +49,7 @@ export default function PerfilPage() {
             <div className="mt-4 h-2 overflow-hidden rounded-full bg-secondary">
               <div
                 className="h-full rounded-full bg-primary"
-                style={{ width: `${Math.round((spendingSummary.totalSpend / profileSettings.monthlyBudget) * 100)}%` }}
+                style={{ width: `${Math.min(budgetProgress, 100)}%` }}
               />
             </div>
             <p className="mt-3 text-sm text-muted-foreground">Alertar cuando el gasto llegue al {profileSettings.alertThreshold}% del objetivo.</p>

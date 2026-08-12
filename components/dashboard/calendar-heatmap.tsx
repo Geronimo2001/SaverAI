@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import Link from "next/link"
 import { Car, ChevronLeft, ChevronRight, Coffee, CreditCard, Home, ShoppingBag, Utensils, Wallet, Wifi } from "lucide-react"
 
 interface Transaction {
@@ -24,6 +25,9 @@ interface CalendarHeatmapProps {
     name: string
     lastFour: string
   }[]
+  previousHref?: string
+  nextHref?: string
+  canGoNext?: boolean
 }
 
 const CATEGORIES = [
@@ -46,9 +50,16 @@ function getIntensityClass(amount: number, maxAmount: number, hasData: boolean):
   return "bg-primary border border-primary"
 }
 
-export function CalendarHeatmap({ month, year, days, cards = [] }: CalendarHeatmapProps) {
+export function CalendarHeatmap({
+  month,
+  year,
+  days,
+  cards = [],
+  previousHref,
+  nextHref,
+  canGoNext = true,
+}: CalendarHeatmapProps) {
   const [selectedDayDate, setSelectedDayDate] = useState<number | null>(null)
-  const [currentMonth, setCurrentMonth] = useState(month)
   const [activeCategories, setActiveCategories] = useState<string[]>([])
   const [activeCards, setActiveCards] = useState<string[]>([])
   
@@ -80,7 +91,10 @@ export function CalendarHeatmap({ month, year, days, cards = [] }: CalendarHeatm
   const selectedDay = filteredDays.find((day) => day.date === selectedDayDate) ?? null
   
   // Get the first day of month (0 = Sunday, we want Monday = 0)
-  const firstDayOfMonth = new Date(year, getMonthIndex(currentMonth), 1).getDay()
+  const monthIndex = getMonthIndex(month)
+  const today = new Date()
+  const isCurrentCalendarMonth = today.getFullYear() === year && today.getMonth() === monthIndex
+  const firstDayOfMonth = new Date(year, monthIndex, 1).getDay()
   const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1
   
   function getMonthIndex(monthName: string): number {
@@ -112,28 +126,45 @@ export function CalendarHeatmap({ month, year, days, cards = [] }: CalendarHeatm
   return (
     <div className="flex flex-col gap-4">
       {/* Month Header */}
-      <div className="flex items-center justify-between">
-        <button 
-          onClick={() => setCurrentMonth("Marzo")}
-          className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-        >
-          <ChevronLeft className="size-5 text-foreground" />
-        </button>
+      <div className="flex items-center justify-between gap-3">
+        {previousHref ? (
+          <Link
+            href={previousHref}
+            aria-label="Ver mes anterior"
+            className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:border-primary/60 hover:text-foreground"
+          >
+            <ChevronLeft className="size-5" />
+          </Link>
+        ) : (
+          <span className="size-10" />
+        )}
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-foreground md:text-3xl">{currentMonth} {year}</h2>
+          <h2 className="text-2xl font-bold text-foreground md:text-3xl">{month} {year}</h2>
           <p className="text-sm text-muted-foreground mt-0.5 md:text-base">
-            {hasActiveFilters ? `${activeCategories.length + activeCards.length} filtros activos` : "Total gastado"}: {" "}
+            {hasActiveFilters ? `${activeCategories.length + activeCards.length} filtros activos` : "Total gastado"}:{" "}
             <span className="text-primary font-semibold">
               ${totalFiltered.toLocaleString("es-AR")}
             </span>
           </p>
         </div>
-        <button 
-          onClick={() => setCurrentMonth("Abril")}
-          className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-        >
-          <ChevronRight className="size-5 text-foreground" />
-        </button>
+        {nextHref && canGoNext ? (
+          <Link
+            href={nextHref}
+            aria-label="Ver mes siguiente"
+            className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:border-primary/60 hover:text-foreground"
+          >
+            <ChevronRight className="size-5" />
+          </Link>
+        ) : (
+          <button
+            type="button"
+            aria-label="No hay meses futuros disponibles"
+            disabled
+            className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground/35"
+          >
+            <ChevronRight className="size-5" />
+          </button>
+        )}
       </div>
       
       {/* Filter Pills */}
@@ -225,8 +256,9 @@ export function CalendarHeatmap({ month, year, days, cards = [] }: CalendarHeatm
           ))}
           
           {/* Day cells */}
-          {filteredDays.map((day, index) => {
+          {filteredDays.map((day) => {
             const hasData = day.amount > 0
+            const isToday = isCurrentCalendarMonth && day.date === today.getDate()
             return (
               <button
                 key={day.date}
@@ -235,6 +267,7 @@ export function CalendarHeatmap({ month, year, days, cards = [] }: CalendarHeatm
                   aspect-square rounded-xl flex flex-col items-center justify-center
                   transition-all duration-200 hover:scale-105 
                   ${getIntensityClass(day.amount, maxAmount, hasData)}
+                  ${isToday ? "outline outline-2 outline-offset-2 outline-foreground/60" : ""}
                   ${selectedDayDate === day.date ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}
                 `}
               >
@@ -271,7 +304,7 @@ export function CalendarHeatmap({ month, year, days, cards = [] }: CalendarHeatm
         <div className="rounded-2xl bg-card border border-border p-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <span className="text-lg font-semibold text-foreground">{selectedDay.date} de {currentMonth}</span>
+              <span className="text-lg font-semibold text-foreground">{selectedDay.date} de {month}</span>
               <p className="text-sm text-muted-foreground">
                 {selectedDay.transactions.length} transacciones
               </p>
@@ -295,7 +328,7 @@ export function CalendarHeatmap({ month, year, days, cards = [] }: CalendarHeatm
                   >
                     <div className="flex items-center gap-3">
                       <div className={`p-2 rounded-lg ${category.color}/20`}>
-                        <Icon className={`size-4 ${category.color.replace('bg-', 'text-')}`} />
+                        <Icon className={`size-4 ${category.color.replace("bg-", "text-")}`} />
                       </div>
                       <div>
                         <span className="text-sm font-medium text-foreground">{tx.name}</span>

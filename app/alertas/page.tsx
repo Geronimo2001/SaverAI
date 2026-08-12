@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { BottomNav } from "@/components/dashboard/bottom-nav"
-import { alerts } from "@/lib/capsa-data"
+import { getWebIcon } from "@/components/dashboard/web-icon"
+import { getCapsaDashboardData } from "@/lib/capsa-db"
 import { ChevronRight } from "lucide-react"
 
 const toneBySeverity: Record<string, string> = {
@@ -9,7 +10,11 @@ const toneBySeverity: Record<string, string> = {
   Oportunidad: "border-primary/35 bg-primary/10 text-primary",
 }
 
-export default function AlertasPage() {
+export const dynamic = "force-dynamic"
+
+export default async function AlertasPage() {
+  const { alerts } = await getCapsaDashboardData()
+
   return (
     <main className="min-h-screen bg-background pb-28 text-foreground md:pb-10 md:pl-24">
       <div className="mx-auto max-w-md md:grid md:max-w-5xl md:grid-cols-12 md:gap-5 md:px-8">
@@ -21,7 +26,7 @@ export default function AlertasPage() {
         <section className="px-5 pt-2 md:col-span-4 md:px-0 md:pt-0">
           <div className="rounded-lg border border-border bg-card p-4 md:sticky md:top-8">
             <p className="text-xs text-muted-foreground">Estado de gasto</p>
-            <h2 className="mt-1 text-2xl font-semibold">4 eventos requieren revision</h2>
+            <h2 className="mt-1 text-2xl font-semibold">{alerts.length} eventos requieren revision</h2>
             <p className="mt-2 text-sm text-muted-foreground">Priorizadas por impacto en objetivo, duplicados y oportunidad cercana.</p>
           </div>
         </section>
@@ -29,7 +34,7 @@ export default function AlertasPage() {
         <section className="px-5 pt-5 md:col-span-8 md:px-0 md:pt-0">
           <div className="space-y-2">
             {alerts.map((alert) => {
-              const Icon = alert.icon
+              const Icon = getWebIcon(alert.icon)
               const tone = toneBySeverity[alert.severity] ?? toneBySeverity.Media
 
               return (

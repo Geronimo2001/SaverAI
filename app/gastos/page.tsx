@@ -1,9 +1,33 @@
 import { CalendarHeatmap } from "@/components/dashboard/calendar-heatmap"
 import { BottomNav } from "@/components/dashboard/bottom-nav"
-import { categories, calendarDays, formatCurrency, getCategory, linkedCards, spendingSummary, transactions } from "@/lib/capsa-data"
+import { getWebIcon } from "@/components/dashboard/web-icon"
+import { formatCurrency, getCategory, getDateFromPeriodKey, isFuturePeriodKey, shiftPeriodKey } from "@/lib/capsa-data"
+import { getCapsaDashboardData } from "@/lib/capsa-db"
 
-export default function GastosPage() {
+export const dynamic = "force-dynamic"
+
+interface GastosPageProps {
+  searchParams?: Promise<Record<string, string | string[] | undefined>> | Record<string, string | string[] | undefined>
+}
+
+function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value
+}
+
+export default async function GastosPage({ searchParams }: GastosPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : {}
+  const period = firstParam(resolvedSearchParams.period)
+  const {
+    calendarDays,
+    categories,
+    currentMonth,
+    linkedCards,
+    spendingSummary,
+    transactions,
+  } = await getCapsaDashboardData(getDateFromPeriodKey(period))
   const topDay = calendarDays.reduce((max, day) => (day.amount > max.amount ? day : max), calendarDays[0])
+  const previousPeriod = shiftPeriodKey(currentMonth.periodKey, -1)
+  const nextPeriod = shiftPeriodKey(currentMonth.periodKey, 1)
 
   return (
     <main className="min-h-screen bg-background pb-28 text-foreground md:pb-10 md:pl-24">
@@ -17,7 +41,7 @@ export default function GastosPage() {
           <div className="grid grid-cols-2 gap-2 md:grid-cols-1">
             <div className="rounded-lg border border-border bg-card p-3">
               <p className="text-xs text-muted-foreground">Mayor dia</p>
-              <p className="mt-1 text-xl font-semibold">{topDay.date} Abr</p>
+              <p className="mt-1 text-xl font-semibold">{topDay.date} {currentMonth.shortName}</p>
               <p className="text-xs text-primary">{formatCurrency(topDay.amount)}</p>
             </div>
             <div className="rounded-lg border border-border bg-card p-3">
@@ -29,14 +53,22 @@ export default function GastosPage() {
         </section>
 
         <section className="px-5 pt-5 md:col-span-8 md:px-0 md:pt-0">
-          <CalendarHeatmap month="Abril" year={2026} days={calendarDays} cards={linkedCards} />
+          <CalendarHeatmap
+            month={currentMonth.month}
+            year={currentMonth.year}
+            days={calendarDays}
+            cards={linkedCards}
+            previousHref={`/gastos?period=${previousPeriod}`}
+            nextHref={`/gastos?period=${nextPeriod}`}
+            canGoNext={!isFuturePeriodKey(nextPeriod)}
+          />
         </section>
 
         <section className="px-5 pt-5 md:col-span-12 md:px-0">
           <h2 className="mb-3 text-base font-semibold">Categorias disponibles</h2>
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide md:flex-wrap md:overflow-visible">
             {categories.map((category) => {
-              const Icon = category.icon
+              const Icon = getWebIcon(category.icon)
 
               return (
                 <div key={category.key} className="flex shrink-0 items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
@@ -55,8 +87,8 @@ export default function GastosPage() {
           </div>
           <div className="space-y-2 md:grid md:grid-cols-2 md:gap-2 md:space-y-0">
             {transactions.map((transaction) => {
-              const category = getCategory(transaction.category)
-              const Icon = category.icon
+              const category = getCategory(categories, transaction.category)
+              const Icon = getWebIcon(category.icon)
 
               return (
                 <div key={transaction.id} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-3">
