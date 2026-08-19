@@ -12,7 +12,11 @@
     "server:dev": "tsx server/server.ts",
     "server:migrate": "tsx server/migrate.ts",
     "server:seed:dev": "tsx server/seed-dev.ts",
-    "server:typecheck": "tsc --noEmit -p tsconfig.server.json"
+    "server:typecheck": "tsc --noEmit -p tsconfig.server.json",
+    "bot:dev": "tsx bot/server.ts",
+    "bot:typecheck": "tsc --noEmit -p tsconfig.bot.json",
+    "bot:vincular": "tsx bot/vincular-usuario.ts",
+    "bot:audio": "tsx bot/probar-audio.ts"
   },
   "dependencies": {
     "@noble/hashes": "^2.3.0",
