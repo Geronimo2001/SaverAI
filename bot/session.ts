@@ -45,6 +45,8 @@ interface Session {
   rawTexts: string[]
   askingField?: ExpenseField
   awaitingConfirmation: boolean
+  /** epoch ms de la ultima actividad, para expirar conversaciones abandonadas. */
+  updatedAt: number
 }
 
 export interface SessionOutcome {
@@ -54,10 +56,23 @@ export interface SessionOutcome {
   confirmed?: ConfirmedExpensePayload
 }
 
+/**
+ * Conversaciones en curso, en memoria. Es estado de prototipo: se pierde si el
+ * bot se reinicia y no se comparte entre instancias (para eso iria Redis o una
+ * tabla). Se expira lo abandonado para no crecer sin limite.
+ */
 const sessions = new Map<string, Session>()
+const SESSION_TTL_MS = 15 * 60 * 1000
 
 export function clearSession(userId: string) {
   sessions.delete(userId)
+}
+
+/** Borra las conversaciones sin actividad por mas de SESSION_TTL_MS. */
+function sweepExpiredSessions(now: number) {
+  for (const [userId, session] of sessions) {
+    if (now - session.updatedAt > SESSION_TTL_MS) sessions.delete(userId)
+  }
 }
 
 // ---------- helpers de texto ----------
@@ -310,7 +325,11 @@ export async function handleIncomingMessage(
   context: BotContext,
 ): Promise<SessionOutcome> {
   const referenceDate = message.receivedAt ?? new Date()
+  const now = referenceDate.getTime()
   const command = normalizeCommand(message.text)
+
+  // Limpia conversaciones abandonadas y descarta la propia si ya expiró.
+  sweepExpiredSessions(now)
   const existing = sessions.get(message.userId)
 
   if (existing && isCancel(command)) {
@@ -329,8 +348,10 @@ export async function handleIncomingMessage(
     sourceMessageIds: [],
     rawTexts: [],
     awaitingConfirmation: false,
+    updatedAt: now,
   }
 
+  session.updatedAt = now
   session.sourceMessageIds.push(message.messageId)
   session.rawTexts.push(message.text.trim())
   session.awaitingConfirmation = false

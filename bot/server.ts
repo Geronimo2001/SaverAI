@@ -12,6 +12,7 @@ import { transcribeAudio } from "./transcribe"
 import { describeExpense, handleIncomingMessage } from "./session"
 import { getBotContext } from "./context"
 import { publishConfirmedExpense } from "./backend"
+import { debug, error as logError, info, setDebug, warn } from "./log"
 
 /**
  * Bot de WhatsApp de CapsaAI.
@@ -26,11 +27,28 @@ import { publishConfirmedExpense } from "./backend"
  */
 
 const config = getBotConfig()
-
-// Anti-reproceso: Meta reintenta si tardamos. En produccion deberia persistirse.
-const seenMessageIds = new Set<string>()
+setDebug(config.debug)
 
 const INBOUND_PATH = "/webhooks/whatsapp/inbound"
+
+/**
+ * Anti-reproceso en memoria. Meta reintenta si tardamos en responder 200, y
+ * puede reenviar el mismo mensaje. La idempotencia REAL la garantiza el backend
+ * (`external_message_id UNIQUE`); esto solo evita trabajo duplicado dentro del
+ * proceso. Acotado en tamano para no crecer sin limite en corridas largas.
+ */
+const SEEN_CAP = 1000
+const seenMessageIds = new Set<string>()
+
+function alreadySeen(id: string): boolean {
+  if (seenMessageIds.has(id)) return true
+  seenMessageIds.add(id)
+  if (seenMessageIds.size > SEEN_CAP) {
+    const oldest = seenMessageIds.values().next().value
+    if (oldest !== undefined) seenMessageIds.delete(oldest)
+  }
+  return false
+}
 
 interface WhatsAppMessage {
   id: string
@@ -73,20 +91,39 @@ function collectMessages(payload: unknown): WhatsAppMessage[] {
   return messages
 }
 
+/** Error de negocio con un mensaje ya listo para responderle al usuario. */
+class UserFacingError extends Error {}
+
 /** Convierte el mensaje de WhatsApp en texto (transcribiendo si es audio). */
 async function resolveText(message: WhatsAppMessage): Promise<string | null> {
   if (message.type === "text" && message.text?.body) {
-    return message.text.body
+    return message.text.body.trim() || null
   }
 
   if (message.type === "audio" && message.audio?.id) {
     if (!config.ai) {
-      throw new Error("Llego un audio pero no hay proveedor de IA configurado (falta GROQ_API_KEY)")
+      throw new UserFacingError(
+        "Recibí un audio pero no tengo configurada la transcripción. Escribime el gasto por texto por ahora.",
+      )
     }
-    const media = await downloadMedia(message.audio.id, config)
-    return transcribeAudio(media.buffer, media.mimeType, config.ai)
+    let media
+    try {
+      media = await downloadMedia(message.audio.id, config)
+    } catch (err) {
+      logError("No pude descargar el audio de Meta", err)
+      throw new UserFacingError("No pude bajar el audio (¿token de WhatsApp vencido?). Probá de nuevo o mandámelo por texto.")
+    }
+    try {
+      const text = await transcribeAudio(media.buffer, media.mimeType, config.ai)
+      debug(`audio transcripto: "${text}"`)
+      return text
+    } catch (err) {
+      logError("Falló la transcripción", err)
+      throw new UserFacingError("No pude entender el audio. Probá hablar más claro, o escribime el gasto por texto.")
+    }
   }
 
+  // Otros tipos (imagen, sticker, ubicacion, etc.)
   return null
 }
 
@@ -114,50 +151,63 @@ async function handleMessage(message: WhatsAppMessage): Promise<void> {
   const phone = toPhoneE164(message.from)
   const userId = toWhatsappUserId(message.from)
 
+  // 1) Obtener el texto (transcribiendo si es audio).
   let text: string | null
   try {
     text = await resolveText(message)
-  } catch (error) {
-    console.error("No se pudo leer el mensaje:", error)
-    await sendText(phone, "No pude escuchar ese audio, ¿probás de nuevo?", config)
+  } catch (err) {
+    if (err instanceof UserFacingError) {
+      await sendText(phone, err.message, config)
+      return
+    }
+    logError("Error leyendo el mensaje", err)
+    await sendText(phone, "Se me complicó procesar tu mensaje. Probá de nuevo en un rato 🙏", config)
     return
   }
 
   if (!text) {
-    await sendText(phone, 'Mandame un audio o un texto con el gasto, por ejemplo: "gasté 2000 en sushi en Tepanyaki".', config)
+    await sendText(
+      phone,
+      'Mandame un audio o un texto con el gasto, por ejemplo: "gasté 2000 en comida en Tepanyaki".',
+      config,
+    )
     return
   }
 
-  console.log(`  texto: "${text}"  (userId ${userId})`)
+  debug(`${message.type} de ${message.from} → "${text}"`)
 
-  // Categorias y tarjetas salen del backend (con respaldo fijo si no responde).
+  // 2) Conversar: completar el gasto y decidir si se publica.
   const context = await getBotContext(userId, config.backendUrl)
   const outcome = await handleIncomingMessage({ userId, messageId: message.id, text }, config.ai, context)
 
   if (!outcome.confirmed) {
-    console.log(`  respuesta al usuario: "${outcome.reply}"`)
+    debug(`respuesta: "${outcome.reply}"`)
     await sendText(phone, outcome.reply, config)
     return
   }
 
+  // 3) Publicar en el backend.
+  const detail = describeExpense(outcome.confirmed.expense)
   try {
-    console.log(`  publicando en el backend: ${JSON.stringify(outcome.confirmed.expense)}`)
     const result = await publishConfirmedExpense(outcome.confirmed, config)
-    console.log(`  backend respondio: HTTP ${result.httpStatus} status=${result.status}`)
-    const detail = describeExpense(outcome.confirmed.expense)
+    if (result.status === "created") info(`✔ ${detail} — ${userId}`)
+    else if (result.status === "duplicate") info(`= duplicado: ${detail} — ${userId}`)
+    else warn(`backend rechazó (${result.httpStatus}/${result.status}): ${detail}`)
     await sendText(phone, describeBackendResult(result, detail), config)
-  } catch (error) {
-    console.error("No se pudo publicar el gasto:", error)
-    await sendText(phone, "No pude comunicarme con el backend. ¿Está levantado el servidor?", config)
+  } catch (err) {
+    logError("No pude publicar en el backend", err)
+    await sendText(
+      phone,
+      "Entendí tu gasto pero no pude guardarlo (el servidor no responde). Ya vuelvo a intentar más tarde 🙏",
+      config,
+    )
   }
 }
 
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url ?? "/", `http://localhost:${config.port}`)
-
-    // Traza de TODAS las requests que llegan (util para diagnosticar el webhook).
-    console.log(`[${new Date().toISOString()}] ${request.method} ${url.pathname}`)
+    debug(`${request.method} ${url.pathname}`)
 
     if (request.method === "GET" && url.pathname === "/health") {
       response.writeHead(200, { "content-type": "application/json" })
@@ -168,9 +218,11 @@ const server = createServer(async (request, response) => {
     if (request.method === "GET" && url.pathname === INBOUND_PATH) {
       const challenge = verifyChallenge(url.searchParams, config)
       if (challenge === null) {
+        warn("verificación de webhook rechazada (verify_token no coincide)")
         response.writeHead(403).end("Forbidden")
         return
       }
+      info("webhook verificado por Meta ✓")
       response.writeHead(200, { "content-type": "text/plain" }).end(challenge)
       return
     }
@@ -179,6 +231,7 @@ const server = createServer(async (request, response) => {
       const rawBody = await readRawBody(request)
 
       if (!isValidMetaSignature(rawBody, request.headers["x-hub-signature-256"] as string | undefined, config)) {
+        warn("firma de Meta inválida (x-hub-signature-256)")
         response.writeHead(401, { "content-type": "application/json" }).end(JSON.stringify({ status: "unauthorized" }))
         return
       }
@@ -190,28 +243,26 @@ const server = createServer(async (request, response) => {
       try {
         payload = JSON.parse(rawBody.toString("utf8"))
       } catch {
-        console.log("  cuerpo no era JSON valido")
+        debug("cuerpo no era JSON válido, ignorado")
         return
       }
 
       const incoming = collectMessages(payload)
-      console.log(`  mensajes en el payload: ${incoming.length}`)
+      if (incoming.length > 0) debug(`${incoming.length} mensaje(s) en el payload`)
       for (const message of incoming) {
-        if (seenMessageIds.has(message.id)) {
-          console.log(`  mensaje ${message.id} ya procesado, salteado`)
+        if (alreadySeen(message.id)) {
+          debug(`mensaje ${message.id} ya procesado, salteado`)
           continue
         }
-        seenMessageIds.add(message.id)
-        console.log(`  procesando mensaje ${message.type} de ${message.from}`)
-        handleMessage(message).catch((error) => console.error("Error procesando mensaje:", error))
+        handleMessage(message).catch((err) => logError("Error no controlado procesando mensaje", err))
       }
       return
     }
 
-    console.log(`  -> 404 (ruta no atendida por el bot)`)
+    debug(`404 ${request.method} ${url.pathname}`)
     response.writeHead(404, { "content-type": "application/json" }).end(JSON.stringify({ status: "not_found" }))
-  } catch (error) {
-    console.error(error)
+  } catch (err) {
+    logError("Error en el servidor", err)
     if (!response.headersSent) {
       response.writeHead(500, { "content-type": "application/json" }).end(JSON.stringify({ status: "error" }))
     }
@@ -219,7 +270,8 @@ const server = createServer(async (request, response) => {
 })
 
 server.listen(config.port, () => {
-  console.log(`Bot de WhatsApp escuchando en http://localhost:${config.port}${INBOUND_PATH}`)
-  console.log(`  backend: ${config.backendUrl}`)
-  console.log(`  IA: ${config.ai ? `${config.ai.provider} (${config.ai.whisperModel})` : "sin configurar - no va a poder transcribir audios"}`)
+  info(`Bot escuchando en http://localhost:${config.port}${INBOUND_PATH}`)
+  info(`backend: ${config.backendUrl}  ·  IA: ${config.ai ? `${config.ai.provider} (${config.ai.whisperModel})` : "sin configurar"}`)
+  if (config.debug) info("modo DEBUG activo (BOT_DEBUG) — logs detallados")
+  if (!config.ai) warn("sin IA configurada: no se van a poder transcribir audios (falta GROQ_API_KEY)")
 })

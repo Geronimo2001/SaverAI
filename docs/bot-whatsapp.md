@@ -98,6 +98,29 @@ cloudflared tunnel --url http://localhost:4020   # URL publica para Meta
 En el panel de Meta, el webhook apunta a `https://TU-TUNEL/webhooks/whatsapp/inbound`
 con el `WHATSAPP_VERIFY_TOKEN`, y hay que suscribirse al campo `messages`.
 
+## Logs, debug y pruebas
+
+- **Logs limpios por defecto:** una linea por gasto (`✔ $5.000 en Tepanyaki (comida) — whatsapp:+549...`),
+  mas warnings/errores. Para ver el detalle paso a paso (cada request, transcripcion, etc.) se corre con
+  `BOT_DEBUG=1 npm run bot:dev`.
+- **Probar el audio sin Meta:** `npm run bot:audio -- <archivo.ogg>` transcribe un audio local y muestra
+  que gasto sacaria el bot, sin tocar la base ni WhatsApp. Tambien acepta texto directo:
+  `npm run bot:audio -- --texto "gaste 5000 en comida en tepanyaki"`.
+
+## Manejo de errores (mensajes al usuario)
+
+- Audio que no se puede bajar (token vencido) o transcribir → avisa y sugiere mandar texto.
+- Backend caido → "Entendí tu gasto pero no pude guardarlo (el servidor no responde)".
+- Backend rechaza (422) → muestra el detalle de la regla que fallo.
+- Sin medio de pago cargado → avisa que corra `bot:vincular`.
+
+## Estado en memoria (limites del prototipo)
+
+- **Anti-duplicados:** `Set` de `message.id` acotado a 1000 (evita reproceso si Meta reintenta). La
+  idempotencia REAL la garantiza el backend (`external_message_id UNIQUE`).
+- **Conversaciones:** en memoria, con expiracion a los 15 min de inactividad. Se pierden si el bot se
+  reinicia y no se comparten entre instancias. Para produccion: Redis o una tabla.
+
 ## Limitaciones conocidas (para el capitulo de alcance)
 
 - ~~Catalogo fijo~~ **resuelto**: `bot/context.ts` ahora lee las categorias y

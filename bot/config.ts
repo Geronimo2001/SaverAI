@@ -29,6 +29,8 @@ export interface BotConfig {
   webhookSecret: string
   /** null si no hay clave de IA: el bot sigue andando, pero sin transcribir audios. */
   ai: AiConfig | null
+  /** true = logs detallados paso a paso (BOT_DEBUG=1). Por defecto, logs limpios. */
+  debug: boolean
 }
 
 const AI_PRESETS: Record<string, { baseUrl: string; keyEnv: string; whisper: string; chat: string }> = {
@@ -36,7 +38,8 @@ const AI_PRESETS: Record<string, { baseUrl: string; keyEnv: string; whisper: str
     baseUrl: "https://api.groq.com/openai/v1",
     keyEnv: "GROQ_API_KEY",
     whisper: "whisper-large-v3-turbo",
-    chat: "llama-3.3-70b-versatile",
+    // Los Llama estandar dejaron de estar disponibles en el tier gratis; gpt-oss-20b es estable.
+    chat: "openai/gpt-oss-20b",
   },
   openai: {
     baseUrl: "https://api.openai.com/v1",
@@ -96,5 +99,6 @@ export function getBotConfig(): BotConfig {
     backendUrl: (process.env.BACKEND_URL || "http://localhost:4010").replace(/\/$/, ""),
     webhookSecret: required("WHATSAPP_WEBHOOK_SECRET"),
     ai: resolveAi(),
+    debug: /^(1|true|yes|on)$/i.test(process.env.BOT_DEBUG ?? ""),
   }
 }
