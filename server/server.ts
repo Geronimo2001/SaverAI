@@ -4,6 +4,8 @@ import { readJsonBody, sendJson, verifyWebhookSignature } from "./http.js"
 import { validateConfirmedBotExpensePayload } from "./confirmed-expense-validation.js"
 import { createConfirmedWhatsappExpense } from "./expenses-repository.js"
 import { pool } from "./db.js"
+import { handleReadRequest } from "./read-routes.js"
+import { handleWhatsappUndo } from "./whatsapp-undo-route.js"
 
 const config = getConfig()
 
@@ -11,6 +13,14 @@ const server = createServer(async (request, response) => {
   try {
     if (request.method === "GET" && request.url === "/health") {
       sendJson(response, 200, { status: "ok" })
+      return
+    }
+
+    if (await handleReadRequest(request, response)) {
+      return
+    }
+
+    if (await handleWhatsappUndo(request, response, config.webhookSecret)) {
       return
     }
 
