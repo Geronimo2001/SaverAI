@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-10-26T02:49:30.700Z",
+  "mode": "read-only",
+  "databases": [
+    {
+      "role": "existente",
+      "database": "capsaai",
+      "counts": {
+        "app_users": 1,
+        "expense_categories": 6,
+        "payment_methods": 3,
+        "expenses": 1,
+        "whatsapp_processed_messages": 3
+      }
+    },
+    {
+      "role": "pruebas",
+      "database": "capsaai_quality_test",
+      "counts": {
+        "app_users": 0,
+        "expense_categories": 6,
+        "payment_methods": 0,
+        "expenses": 0,
+        "whatsapp_processed_messages": 0
+      }
+    }
+  ]
+}

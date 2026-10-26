@@ -1,0 +1,93 @@
+
+ RUN  v5.0.5 /Users/gero/Desktop/gestor_gastos
+
+ ✓ tests/unit/test-database-config.test.ts (11 tests) 3ms
+ ❯ tests/unit/confirmed-expense-validation.test.ts (47 tests | 3 failed) 11ms
+   ❯ Validación de gastos confirmados (47)
+     ✓ CP-001: acepta un gasto completo e incorpora el mensaje principal 2ms
+     ✓ CP-002: rechaza monto inválido 0 0ms
+     ✓ CP-002: rechaza monto inválido -1 0ms
+     ✓ CP-002: rechaza monto inválido "no-numero" 0ms
+     ✓ CP-002: rechaza monto inválido null 0ms
+     ✓ CP-002: rechaza monto inválido undefined 0ms
+     ✓ CP-002: rechaza monto inválido null 0ms
+     ✓ CP-002: rechaza monto inválido null 0ms
+     ✓ CP-002: rechaza monto inválido {} 0ms
+     ✓ CP-002: rechaza monto inválido "" 0ms
+     × CP-003 / DEF-001: rechaza 0.1 porque se redondea a cero 4ms
+     × CP-003 / DEF-001: rechaza 0.49 porque se redondea a cero 0ms
+     × CP-003 / DEF-001: rechaza "0,1" porque se redondea a cero 1ms
+     ✓ CP-004: acepta límite válido 1 0ms
+     ✓ CP-004: acepta límite válido 100000000 0ms
+     ✓ CP-004: rechaza monto superior al máximo 0ms
+     ✓ CP-001: conserva redondeo existente de 0.5 a 1 0ms
+     ✓ CP-001: conserva redondeo existente de 1.5 a 2 0ms
+     ✓ CP-001: conserva redondeo existente de "1500,75" a 1501 0ms
+     ✓ CP-005: rechaza cuerpo incompleto null sin lanzar excepción 0ms
+     ✓ CP-005: rechaza cuerpo incompleto undefined sin lanzar excepción 0ms
+     ✓ CP-005: rechaza cuerpo incompleto "texto" sin lanzar excepción 0ms
+     ✓ CP-005: rechaza cuerpo incompleto {} sin lanzar excepción 0ms
+     ✓ CP-005: rechaza identificadores vacíos y referencias ausentes 0ms
+     ✓ CP-006: comercio de 1 caracteres, válido=false 0ms
+     ✓ CP-006: comercio de 2 caracteres, válido=true 0ms
+     ✓ CP-006: comercio de 80 caracteres, válido=true 0ms
+     ✓ CP-006: comercio de 81 caracteres, válido=false 0ms
+     ✓ CP-006: normaliza espacios y quita espacios externos 0ms
+     ✓ CP-007/008: fecha 2026-10-25, válida=true 0ms
+     ✓ CP-007/008: fecha 2026-10-24, válida=true 0ms
+     ✓ CP-007/008: fecha 2026-10-26, válida=false 0ms
+     ✓ CP-007/008: fecha 2024-02-29, válida=true 0ms
+     ✓ CP-007/008: fecha 2025-02-29, válida=false 0ms
+     ✓ CP-007/008: fecha 2026-13-01, válida=false 0ms
+     ✓ CP-007/008: fecha 2026-04-31, válida=false 0ms
+     ✓ CP-007/008: fecha 25/10/2026, válida=false 0ms
+     ✓ CP-007/008: fecha , válida=false 0ms
+     ✓ CP-005: rechaza descripción que no sea texto 0ms
+     ✓ CP-005: recorta descripción a los 500 caracteres actuales 0ms
+     ✓ CP-010: normaliza mensajes repetidos, vacíos y no textuales 0ms
+     ✓ CP-010: usa el mensaje principal si no hay lista de origen 0ms
+     ✓ CP-005: acepta confirmedAt opcional "2026-10-25T12:00:00Z" 0ms
+     ✓ CP-005: acepta confirmedAt opcional "" 0ms
+     ✓ CP-005: acepta confirmedAt opcional undefined 0ms
+     ✓ CP-005: rechaza confirmedAt inválido "fecha-invalida" 0ms
+     ✓ CP-005: rechaza confirmedAt inválido 123 0ms
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 55 passed (58)
+   Start at  23:19:28
+   Duration  160ms (transform 53%, import 23%, tests 18%, worker 6%)
+
+JSON report written to /Users/gero/Desktop/gestor_gastos/docs/calidad/evidencias/def-001/rojo.json
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/confirmed-expense-validation.test.ts > Validación de gastos confirmados > CP-003 / DEF-001: rechaza 0.1 porque se redondea a cero
+ FAIL  tests/unit/confirmed-expense-validation.test.ts > Validación de gastos confirmados > CP-003 / DEF-001: rechaza 0.49 porque se redondea a cero
+ FAIL  tests/unit/confirmed-expense-validation.test.ts > Validación de gastos confirmados > CP-003 / DEF-001: rechaza "0,1" porque se redondea a cero
+AssertionError: expected { valid: true, payload: { …(5) } } to match object { valid: false, errors: [ { …(2) } ] }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "errors": [
+-     {
+-       "code": "invalid_amount",
+-       "field": "expense.amount",
+-     },
+-   ],
+-   "valid": false,
++   "valid": true,
+  }
+
+ ❯ tests/unit/confirmed-expense-validation.test.ts:37:20
+     35|     const result = validateConfirmedBotExpensePayload(input, reference…
+     36|
+     37|     expect(result).toMatchObject({ valid: false, errors: [
+       |                    ^
+     38|       { field: "expense.amount", code: "invalid_amount" },
+     39|     ] })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+

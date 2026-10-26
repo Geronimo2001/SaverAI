@@ -1,0 +1,12 @@
+{
+  "startedAt": "2026-10-26T02:20:14.023Z",
+  "finishedAt": "2026-10-26T02:20:14.427Z",
+  "node": "v24.15.0",
+  "command": "npm run test:evidence -- verde",
+  "exitCode": 0,
+  "source": "server/confirmed-expense-validation.ts",
+  "sourceSha256": "2424ed152afd054ce65c864a850bb56818a8e9111787ad2beba10218328b4c6d",
+  "test": "tests/unit/confirmed-expense-validation.test.ts",
+  "testSha256": "3eb246bcbe3f13788adba9cf610358d6186cfabc9cfce7b9818705ffc8486bba",
+  "scope": "Pruebas unitarias locales; no es una ejecución CI"
+}

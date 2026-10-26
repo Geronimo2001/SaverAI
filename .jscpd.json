@@ -1,0 +1,10 @@
+{
+  "path": ["server"],
+  "format": ["typescript"],
+  "minLines": 5,
+  "minTokens": 50,
+  "mode": "mild",
+  "reporters": ["console", "json"],
+  "output": "reports/duplication",
+  "threshold": 5
+}

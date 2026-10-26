@@ -1,0 +1,12 @@
+{
+  "startedAt": "2026-10-26T02:19:27.440Z",
+  "finishedAt": "2026-10-26T02:19:28.610Z",
+  "node": "v24.15.0",
+  "command": "npm run test:evidence -- rojo",
+  "exitCode": 1,
+  "source": "server/confirmed-expense-validation.ts",
+  "sourceSha256": "1366b2eaab0032cbf66d2f51357087ec362a96363f0cc15e3b52be88b44d61a8",
+  "test": "tests/unit/confirmed-expense-validation.test.ts",
+  "testSha256": "3eb246bcbe3f13788adba9cf610358d6186cfabc9cfce7b9818705ffc8486bba",
+  "scope": "Pruebas unitarias locales; no es una ejecución CI"
+}

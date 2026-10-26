@@ -1,0 +1,11 @@
+{
+  "archivedAt": "2026-10-26T02:45:04.346Z",
+  "command": "npm run test:integration",
+  "scope": "Integracion local HTTP y PostgreSQL; no CI",
+  "hashes": {
+    "server/expenses-repository.ts": "9f5bacbbfc20d028b79dd06900abd57a7b57f0b944f13424e6481f18ff139f1c",
+    "server/read-routes.ts": "437af4d29c3493d9a18b4d1fc608c8e61a8fc8c14d3cdac9bf7daad758d225fa",
+    "server/app.ts": "7449f6fd3b9c1286b870b9f07fc845a21884dfaa575f7bc7fbdc9321ae780171",
+    "tests/integration/backend.test.ts": "50942b87a963278691982ddaa7c474543af9fbdcc0a86eab5f8bd22fedc4e7b2"
+  }
+}

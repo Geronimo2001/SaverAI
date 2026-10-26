@@ -1,0 +1,9 @@
+{
+  "scope": "server/**/*.ts",
+  "baseline": "cf5cc7d7184c79f32acfd22ecaa8b9dca8ca96c1",
+  "existingLinesMin": 50,
+  "newLinesMin": 80,
+  "duplicationMax": 5,
+  "lintErrorsMax": 0,
+  "description": "Backend al inicio del TP. Lineas ejecutables actuales no modificadas frente a la referencia = existentes; agregadas o modificadas = nuevas. Eliminadas no pertenecen al denominador actual."
+}
