@@ -1,0 +1,61 @@
+{
+  "startedAt": "2026-10-26T13:11:30.624Z",
+  "finishedAt": "2026-10-26T13:12:41.425Z",
+  "passed": true,
+  "cleanupPassed": true,
+  "environment": {
+    "node": "v24.21.0",
+    "os": "linux",
+    "release": "6.17.0-1022-azure",
+    "arch": "x64",
+    "cpus": 4,
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "database": "capsaai_quality_test",
+    "postgres": "15.19 (Debian 15.19-1.pgdg13+2)",
+    "k6": "k6 v2.3.0 (commit/e088784614, go1.26.8, linux/amd64)",
+    "gitCommit": "10fcd2ea351e7eb5a737ada07cf9867fe1f78ef8",
+    "sourceHashes": {
+      "tests/load/workflow.js": "d8c62cc87149013429cb0f151d75e144ecc3bd1d59efe7a437a5ec4d9c46e982",
+      "tests/load/run.ts": "d454a8581fbf295522ea04728c74c50e07f56e2858eb7aafb1093c711536763b",
+      "tests/load/load.js": "da30912b4379572911c718d93d3de0be5ee99b1ff85b4ee2f3ec4073f2b9e71b",
+      "tests/load/stress.js": "87e71e4f4a16fb367ee63ec1c8989f0b21e7b15628130762abae9e40972f6d55",
+      "dist/server/server.js": "f7b92c78e365dee903dd8185ff41d526a2d7837af278ecf800babd2a21d4db07"
+    }
+  },
+  "profiles": [
+    {
+      "profile": "load",
+      "exitCode": 0,
+      "passed": true,
+      "requests": 596,
+      "requestsPerSecond": 29.48595698156735,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 149,
+      "completedCycles": 149,
+      "iterations": 149,
+      "p95Ms": 24.77711725,
+      "p99Ms": 92.76385664999991,
+      "averageMs": 4.933764765100671,
+      "maxVUs": 2,
+      "originalReport": "reports/performance/load-k6.json"
+    },
+    {
+      "profile": "stress",
+      "exitCode": 0,
+      "passed": true,
+      "requests": 7396,
+      "requestsPerSecond": 147.15730323394206,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 1849,
+      "completedCycles": 1849,
+      "iterations": 1849,
+      "p95Ms": 49.56867575,
+      "p99Ms": 138.48312500000276,
+      "averageMs": 11.301275774202269,
+      "maxVUs": 20,
+      "originalReport": "reports/performance/stress-k6.json"
+    }
+  ]
+}

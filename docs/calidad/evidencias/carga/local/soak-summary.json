@@ -1,0 +1,17 @@
+{
+  "profile": "soak",
+  "exitCode": 0,
+  "passed": true,
+  "requests": 3720,
+  "requestsPerSecond": 30.996323577720986,
+  "httpFailureRate": 0,
+  "checksRate": 1,
+  "attemptedCycles": 930,
+  "completedCycles": 930,
+  "iterations": 930,
+  "p95Ms": 4.315,
+  "p99Ms": 4.99996,
+  "averageMs": 1.5028293010752676,
+  "maxVUs": 2,
+  "originalReport": "reports/performance/soak-k6.json"
+}

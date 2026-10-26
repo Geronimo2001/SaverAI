@@ -2,7 +2,7 @@
 
 ## DEF-001 — Monto positivo aceptado se convierte en cero
 
-- Estado: **corregido y verificado localmente; cierre documental de CI/tarea/commit pendiente**.
+- Estado: **corregido y verificado localmente y en CI; tarea y aportes individuales pendientes**.
 - Fecha de detección: 25 de octubre de 2026.
 - Requisito / caso: REQ-01 / CP-003 del plan de pruebas.
 - Ubicación: `server/confirmed-expense-validation.ts`, función `parseAmount`.
@@ -41,7 +41,9 @@ La modificación aplica al validador del backend. El validador de la simulación
 - El hash del archivo de pruebas coincide en ambas ejecuciones. Los tres casos se conservan como regresión.
 - La prueba SQL adicional CP-003 confirma que la restricción de PostgreSQL rechaza cero en la base aislada.
 
-Pendiente: vincular tarea, autoría humana, commit y ejecución CI. Estas ejecuciones locales **no cuentan** como la ejecución fallida y verde de CI exigidas por la guía. No se asigna un responsable humano sin evidencia de su participación.
+La [reproducción histórica controlada en CI](08-evidencia-ci-roja-verde.md) conserva el contraste remoto: [rojo](https://github.com/Geronimo2001/SaverAI/actions/runs/40265714889), commit `aa0685e5f2739dca4c8107674d872f2769335374`, y [verde](https://github.com/Geronimo2001/SaverAI/actions/runs/40265838359), commit de restauración `dc5debe7fbb1626af3286a781b2a02bdaa9653bb`. Se mantuvieron exactamente las mismas pruebas. La corrección original ya estaba incluida en `471052a5237d53a6dac6ff9adaf3d3c9273e9a0e`.
+
+Pendiente: vincular tarea y aportes humanos efectivamente realizados. La ejecución técnica fue asistida por Codex; la identidad Git configurada no demuestra por sí sola autoría individual del trabajo. No se asigna un responsable humano sin evidencia de su participación.
 
 ## DEF-002 — Altas concurrentes con origen compartido duplican gastos
 

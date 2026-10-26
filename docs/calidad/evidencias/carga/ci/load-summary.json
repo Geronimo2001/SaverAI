@@ -1,0 +1,17 @@
+{
+  "profile": "load",
+  "exitCode": 0,
+  "passed": true,
+  "requests": 596,
+  "requestsPerSecond": 29.48595698156735,
+  "httpFailureRate": 0,
+  "checksRate": 1,
+  "attemptedCycles": 149,
+  "completedCycles": 149,
+  "iterations": 149,
+  "p95Ms": 24.77711725,
+  "p99Ms": 92.76385664999991,
+  "averageMs": 4.933764765100671,
+  "maxVUs": 2,
+  "originalReport": "reports/performance/load-k6.json"
+}

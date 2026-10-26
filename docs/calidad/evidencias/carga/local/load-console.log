@@ -1,0 +1,78 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: tests/load/load.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 2 max VUs, 30s max duration (incl. graceful stop):
+              * workflow: 2 looping VUs for 20s (gracefulStop: 10s)
+
+
+running (01.0s), 2/2 VUs, 6 complete and 0 interrupted iterations
+workflow   [   5% ] 2 VUs  01.0s/20s
+
+running (02.0s), 2/2 VUs, 14 complete and 0 interrupted iterations
+workflow   [  10% ] 2 VUs  02.0s/20s
+
+running (03.0s), 2/2 VUs, 22 complete and 0 interrupted iterations
+workflow   [  15% ] 2 VUs  03.0s/20s
+
+running (04.0s), 2/2 VUs, 30 complete and 0 interrupted iterations
+workflow   [  20% ] 2 VUs  04.0s/20s
+
+running (05.0s), 2/2 VUs, 38 complete and 0 interrupted iterations
+workflow   [  25% ] 2 VUs  05.0s/20s
+
+running (06.0s), 2/2 VUs, 46 complete and 0 interrupted iterations
+workflow   [  30% ] 2 VUs  06.0s/20s
+
+running (07.0s), 2/2 VUs, 54 complete and 0 interrupted iterations
+workflow   [  35% ] 2 VUs  07.0s/20s
+
+running (08.0s), 2/2 VUs, 60 complete and 0 interrupted iterations
+workflow   [  40% ] 2 VUs  08.0s/20s
+
+running (09.0s), 2/2 VUs, 68 complete and 0 interrupted iterations
+workflow   [  45% ] 2 VUs  09.0s/20s
+
+running (10.0s), 2/2 VUs, 76 complete and 0 interrupted iterations
+workflow   [  50% ] 2 VUs  10.0s/20s
+
+running (11.0s), 2/2 VUs, 84 complete and 0 interrupted iterations
+workflow   [  55% ] 2 VUs  11.0s/20s
+
+running (12.0s), 2/2 VUs, 92 complete and 0 interrupted iterations
+workflow   [  60% ] 2 VUs  12.0s/20s
+
+running (13.0s), 2/2 VUs, 100 complete and 0 interrupted iterations
+workflow   [  65% ] 2 VUs  13.0s/20s
+
+running (14.0s), 2/2 VUs, 108 complete and 0 interrupted iterations
+workflow   [  70% ] 2 VUs  14.0s/20s
+
+running (15.0s), 2/2 VUs, 116 complete and 0 interrupted iterations
+workflow   [  75% ] 2 VUs  15.0s/20s
+
+running (16.0s), 2/2 VUs, 122 complete and 0 interrupted iterations
+workflow   [  80% ] 2 VUs  16.0s/20s
+
+running (17.0s), 2/2 VUs, 130 complete and 0 interrupted iterations
+workflow   [  85% ] 2 VUs  17.0s/20s
+
+running (18.0s), 2/2 VUs, 138 complete and 0 interrupted iterations
+workflow   [  90% ] 2 VUs  18.0s/20s
+
+running (19.0s), 2/2 VUs, 146 complete and 0 interrupted iterations
+workflow   [  95% ] 2 VUs  19.0s/20s
+
+running (20.0s), 2/2 VUs, 154 complete and 0 interrupted iterations
+workflow   [ 100% ] 2 VUs  20.0s/20s
+
+running (20.1s), 0/2 VUs, 156 complete and 0 interrupted iterations
+workflow ✓ [ 100% ] 2 VUs  20s

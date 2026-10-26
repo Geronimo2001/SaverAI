@@ -171,9 +171,9 @@ describe("API HTTP y repositorio contra PostgreSQL aislado", () => {
     expect((await pool.query("SELECT id FROM expenses WHERE external_message_id = $1", [input.messageId])).rows).toEqual([])
   })
 
-  it("CP-018: escritura sin firma no persiste datos", async () => {
+  it.each([confirmed, deleted])("CP-018: escritura sin firma en %s no modifica datos", async (path) => {
     const input = payload()
-    expect((await post(confirmed, input, false)).status).toBe(401)
+    expect((await post(path, input, false)).status).toBe(401)
     expect((await pool.query("SELECT id FROM expenses WHERE external_message_id = $1", [input.messageId])).rows).toEqual([])
   })
 

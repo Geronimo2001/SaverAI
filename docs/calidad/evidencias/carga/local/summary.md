@@ -1,0 +1,183 @@
+# Calidad del backend — APROBADO
+
+| Etapa | Resultado |
+| --- | --- |
+| typecheck | OK |
+| server:typecheck | OK |
+| test:typecheck | OK |
+| build:server | OK |
+| lint:report | OK |
+| duplication | OK |
+| test:coverage | OK |
+| test:integration | OK |
+| quality:gate | OK |
+| test:performance:ci | OK |
+
+```json
+{
+  "passed": true,
+  "baseline": "cf5cc7d7184c79f32acfd22ecaa8b9dca8ca96c1",
+  "scope": "server/**/*.ts",
+  "coverage": {
+    "existing": {
+      "covered": 137,
+      "total": 228,
+      "percentage": 60.08771929824561
+    },
+    "new": {
+      "covered": 45,
+      "total": 50,
+      "percentage": 90
+    }
+  },
+  "duplication": {
+    "percentage": 0,
+    "lines": 0,
+    "total": 915
+  },
+  "lintErrors": 0,
+  "lintWarnings": 0,
+  "tests": 121,
+  "checks": {
+    "existingCoverage": true,
+    "newCoverage": true,
+    "duplication": true,
+    "staticAnalysis": true,
+    "tests": true
+  },
+  "files": [
+    {
+      "file": "server/app.ts",
+      "existing": {
+        "covered": 0,
+        "total": 0
+      },
+      "new": {
+        "covered": 27,
+        "total": 29
+      }
+    },
+    {
+      "file": "server/config.ts",
+      "existing": {
+        "covered": 0,
+        "total": 7
+      },
+      "new": {
+        "covered": 0,
+        "total": 0
+      }
+    },
+    {
+      "file": "server/confirmed-expense-validation.ts",
+      "existing": {
+        "covered": 53,
+        "total": 58
+      },
+      "new": {
+        "covered": 6,
+        "total": 6
+      }
+    },
+    {
+      "file": "server/db.ts",
+      "existing": {
+        "covered": 11,
+        "total": 11
+      },
+      "new": {
+        "covered": 0,
+        "total": 0
+      }
+    },
+    {
+      "file": "server/expenses-repository.ts",
+      "existing": {
+        "covered": 32,
+        "total": 34
+      },
+      "new": {
+        "covered": 8,
+        "total": 8
+      }
+    },
+    {
+      "file": "server/http.ts",
+      "existing": {
+        "covered": 27,
+        "total": 27
+      },
+      "new": {
+        "covered": 0,
+        "total": 0
+      }
+    },
+    {
+      "file": "server/migrate.ts",
+      "existing": {
+        "covered": 0,
+        "total": 8
+      },
+      "new": {
+        "covered": 0,
+        "total": 0
+      }
+    },
+    {
+      "file": "server/read-routes.ts",
+      "existing": {
+        "covered": 14,
+        "total": 42
+      },
+      "new": {
+        "covered": 4,
+        "total": 6
+      }
+    },
+    {
+      "file": "server/seed-dev.ts",
+      "existing": {
+        "covered": 0,
+        "total": 13
+      },
+      "new": {
+        "covered": 0,
+        "total": 0
+      }
+    },
+    {
+      "file": "server/server.ts",
+      "existing": {
+        "covered": 0,
+        "total": 8
+      },
+      "new": {
+        "covered": 0,
+        "total": 1
+      }
+    },
+    {
+      "file": "server/whatsapp-undo-route.ts",
+      "existing": {
+        "covered": 0,
+        "total": 20
+      },
+      "new": {
+        "covered": 0,
+        "total": 0
+      }
+    }
+  ]
+}
+```
+
+Alcance: backend server/**/*.ts; no es cobertura de toda la app.
+
+## Carga y stress del backend
+
+| Perfil | Solicitudes | p95 ms | p99 ms | Errores HTTP | Resultado |
+| --- | ---: | ---: | ---: | ---: | --- |
+| load | 624 | 4.52 | 5.31 | 0 | OK |
+| stress | 8332 | 8.91 | 13.88 | 0 | OK |
+
+Limpieza: OK. Entorno local sintetico de CI; soak manual.

@@ -6,7 +6,7 @@ rmSync("reports", { recursive: true, force: true })
 rmSync("coverage/unit", { recursive: true, force: true })
 mkdirSync("reports/logs", { recursive: true })
 const startedAt = new Date().toISOString()
-const stages = ["typecheck", "server:typecheck", "test:typecheck", "build:server", "lint:report", "duplication", "test:coverage", "test:integration", "quality:gate"]
+const stages = ["typecheck", "server:typecheck", "test:typecheck", "build:server", "lint:report", "duplication", "test:coverage", "test:integration", "quality:gate", "test:performance:ci"]
 const results = []
 for (const name of stages) {
   console.log(`\nEjecutando ${name}`)
@@ -25,6 +25,13 @@ const gate = JSON.parse(readFileSync("reports/quality-gate.json", "utf8"))
 let summary = `# Calidad del backend — ${passed ? "APROBADO" : "RECHAZADO"}\n\n`
 summary += "| Etapa | Resultado |\n| --- | --- |\n" + results.map((stage) => `| ${stage.name} | ${stage.exitCode === 0 ? "OK" : "FALLO"} |`).join("\n") + "\n\n"
 summary += "```json\n" + JSON.stringify(gate, null, 2) + "\n```\n\nAlcance: backend server/**/*.ts; no es cobertura de toda la app.\n"
+try {
+  const performance = JSON.parse(readFileSync("reports/performance/ci-run.json", "utf8"))
+  summary += "\n## Carga y stress del backend\n\n"
+  summary += "| Perfil | Solicitudes | p95 ms | p99 ms | Errores HTTP | Resultado |\n| --- | ---: | ---: | ---: | ---: | --- |\n"
+  summary += performance.profiles.map(p => `| ${p.profile} | ${p.requests} | ${p.p95Ms?.toFixed(2)} | ${p.p99Ms?.toFixed(2)} | ${p.httpFailureRate} | ${p.passed ? "OK" : "FALLO"} |`).join("\n") + "\n"
+  summary += `\nLimpieza: ${performance.cleanupPassed ? "OK" : "FALLO"}. Entorno local sintetico de CI; soak manual.\n`
+} catch { summary += "\nNo se genero el resumen de carga; consultar la etapa test:performance:ci.\n" }
 writeFileSync("reports/summary.md", summary)
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary)
 process.exitCode = passed ? 0 : 1

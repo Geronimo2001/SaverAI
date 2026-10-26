@@ -1,0 +1,42 @@
+{
+  "startedAt": "2026-10-26T13:04:30.635Z",
+  "finishedAt": "2026-10-26T13:04:31.185Z",
+  "passed": true,
+  "cleanupPassed": true,
+  "environment": {
+    "node": "v24.15.0",
+    "os": "darwin",
+    "release": "25.5.0",
+    "arch": "arm64",
+    "cpus": 10,
+    "cpu": "Apple M4",
+    "database": "capsaai_quality_test",
+    "postgres": "15.17 (Homebrew)",
+    "k6": "k6 v2.3.0 (commit/e088784614, go1.26.8, darwin/arm64)",
+    "gitCommit": "3d3bb8a51ec759d9a520e216f479fa53421e5d95",
+    "sourceHashes": {
+      "tests/load/workflow.js": "d8c62cc87149013429cb0f151d75e144ecc3bd1d59efe7a437a5ec4d9c46e982",
+      "tests/load/run.ts": "1264ddcde1a6f7641d00b691a5765983bd72d2f0c647c754de433f36a0565e11",
+      "tests/load/poc.js": "51601a83c6aed376eba934f5fccca1a83f60138108f31aa96a2065b831917392",
+      "dist/server/server.js": "f7b92c78e365dee903dd8185ff41d526a2d7837af278ecf800babd2a21d4db07"
+    }
+  },
+  "profiles": [
+    {
+      "profile": "probe",
+      "exitCode": 99,
+      "passed": false,
+      "requests": 4,
+      "requestsPerSecond": 14.670123925871865,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 1,
+      "completedCycles": 1,
+      "iterations": 1,
+      "p95Ms": 15.352599999999997,
+      "p99Ms": 17.334519999999998,
+      "averageMs": 5.116,
+      "originalReport": "reports/performance/probe-k6.json"
+    }
+  ]
+}

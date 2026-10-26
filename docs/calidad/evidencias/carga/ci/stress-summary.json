@@ -1,0 +1,17 @@
+{
+  "profile": "stress",
+  "exitCode": 0,
+  "passed": true,
+  "requests": 7396,
+  "requestsPerSecond": 147.15730323394206,
+  "httpFailureRate": 0,
+  "checksRate": 1,
+  "attemptedCycles": 1849,
+  "completedCycles": 1849,
+  "iterations": 1849,
+  "p95Ms": 49.56867575,
+  "p99Ms": 138.48312500000276,
+  "averageMs": 11.301275774202269,
+  "maxVUs": 20,
+  "originalReport": "reports/performance/stress-k6.json"
+}

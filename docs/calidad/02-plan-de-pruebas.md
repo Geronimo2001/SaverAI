@@ -50,7 +50,7 @@ Los dobles verifican decisiones del código; una prueba contra PostgreSQL aislad
 | REQ-09 Verificar firma | Una escritura sin firma válida se rechaza antes de acceder al repositorio | CP-018 firma válida/ausente/alterada | Unitaria/API | — |
 | REQ-10 Controlar caída | Una falla de base no confirma el alta ni deja registros parciales | CP-019 conexión caída y error de consulta | Integración con dobles | — |
 | REQ-11 Preparar entorno | La migración funciona sobre base vacía y puede repetirse según contrato documentado | CP-020 migración y datos iniciales | Integración | — |
-| REQ-12 Verificar despliegue | Backend operativo, acceso a PostgreSQL y recorrido sintético mínimo satisfactorios | CP-021 smoke | Sistema/smoke | — |
+| REQ-12 Verificar despliegue | Backend operativo, acceso a PostgreSQL y recorrido sintético mínimo satisfactorios | CP-021 smoke | Sistema/smoke | [Smoke local ejecutado](09-smoke-test.md); demo final pendiente |
 | REQ-13 Proteger respuesta de duplicado | Mensaje ya asociado a otro usuario devuelve conflicto sin exponer el gasto original | CP-022 reutilización por otro usuario | API/integración | DEF-003 |
 
 La unidad monetaria exacta y el tratamiento de decimales requieren una decisión registrada antes de corregir DEF-001. La condición mínima ya verificable es que un resultado válido nunca entregue cero a una columna que lo prohíbe. No cambiar la política monetaria de la tesis sin documentarla.

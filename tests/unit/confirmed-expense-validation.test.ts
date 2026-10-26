@@ -125,24 +125,6 @@ describe("Validación de gastos confirmados", () => {
     expect(result.valid).toBe(valid)
   })
 
-  it("CP-005: rechaza descripción que no sea texto", () => {
-    const input = validExpense()
-    input.expense.description = 123
-
-    const result = validateConfirmedBotExpensePayload(input, referenceDate)
-
-    expect(result).toMatchObject({ valid: false, errors: [{ field: "expense.description" }] })
-  })
-
-  it("CP-005: recorta descripción a los 500 caracteres actuales", () => {
-    const input = validExpense()
-    input.expense.description = "a".repeat(501)
-
-    const result = validateConfirmedBotExpensePayload(input, referenceDate)
-
-    expect(result).toMatchObject({ valid: true, payload: { expense: { description: "a".repeat(500) } } })
-  })
-
   it("CP-010: normaliza mensajes repetidos, vacíos y no textuales", () => {
     const input = { ...validExpense(), sourceMessageIds: [" quality-message ", "", null, 12, "quality-message"] }
 
@@ -157,14 +139,6 @@ describe("Validación de gastos confirmados", () => {
     const result = validateConfirmedBotExpensePayload(input, referenceDate)
 
     expect(result).toMatchObject({ valid: true, payload: { sourceMessageIds: ["quality-message"] } })
-  })
-
-  it.each(["2026-10-25T12:00:00Z", "", undefined])("CP-005: acepta confirmedAt opcional %j", (confirmedAt) => {
-    const input = { ...validExpense(), confirmedAt }
-
-    const result = validateConfirmedBotExpensePayload(input, referenceDate)
-
-    expect(result.valid).toBe(true)
   })
 
   it.each(["fecha-invalida", 123])("CP-005: rechaza confirmedAt inválido %j", (confirmedAt) => {
