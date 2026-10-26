@@ -73,13 +73,16 @@ function parseRequiredString(value: unknown, field: string, errors: ValidationEr
 }
 
 function parseAmount(value: unknown, errors: ValidationError[]) {
-  const amount = typeof value === "number" ? value : typeof value === "string" ? Number(value.replace(",", ".")) : NaN
-  if (!Number.isFinite(amount) || amount <= 0 || amount > maxAmount) {
+  let amount = NaN
+  if (typeof value === "number") amount = value
+  else if (typeof value === "string") amount = Number(value.replace(",", "."))
+  const roundedAmount = Math.round(amount)
+  if (!Number.isFinite(amount) || amount <= 0 || amount > maxAmount || roundedAmount <= 0) {
     errors.push(error("expense.amount", "invalid_amount", "El monto debe ser un numero positivo razonable."))
     return null
   }
 
-  return Math.round(amount)
+  return roundedAmount
 }
 
 function parseMerchant(value: unknown, errors: ValidationError[]) {

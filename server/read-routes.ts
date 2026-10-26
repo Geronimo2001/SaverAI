@@ -52,7 +52,7 @@ async function listExpenses(whatsappUserId: string, period: string | null) {
   const conditions = ["u.whatsapp_user_id = $1"]
   const params: unknown[] = [whatsappUserId]
 
-  if (period && /^\d{4}-\d{2}$/.test(period)) {
+  if (period) {
     params.push(`${period}-01`)
     conditions.push(`date_trunc('month', e.spent_at) = date_trunc('month', $${params.length}::date)`)
   }
@@ -139,7 +139,13 @@ export async function handleReadRequest(request: IncomingMessage, response: Serv
       return true
     }
 
-    sendReadJson(response, 200, { expenses: await listExpenses(userId, url.searchParams.get("period")) })
+    const period = url.searchParams.get("period")
+    if (period !== null && (!/^\d{4}-(0[1-9]|1[0-2])$/.test(period) || period.startsWith("0000-"))) {
+      sendReadJson(response, 400, { status: "invalid_period", detail: "period debe tener formato YYYY-MM y un anio y mes validos." })
+      return true
+    }
+
+    sendReadJson(response, 200, { expenses: await listExpenses(userId, period) })
     return true
   }
 

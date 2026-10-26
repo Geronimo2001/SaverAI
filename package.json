@@ -12,7 +12,21 @@
     "server:dev": "tsx server/server.ts",
     "server:migrate": "tsx server/migrate.ts",
     "server:seed:dev": "tsx server/seed-dev.ts",
-    "server:typecheck": "tsc --noEmit -p tsconfig.server.json"
+    "server:typecheck": "tsc --noEmit -p tsconfig.server.json",
+    "test": "npm run test:unit",
+    "test:unit": "vitest run --config vitest.config.mts",
+    "test:coverage": "vitest run --config vitest.config.mts --coverage",
+    "test:typecheck": "tsc --noEmit -p tsconfig.tests.json",
+    "test:db:prepare": "tsx scripts/prepare-test-db.ts",
+    "test:integration": "npm run test:db:prepare && vitest run --config vitest.integration.config.mts",
+    "test:all": "npm run test:unit && npm run test:integration",
+    "test:evidence": "node scripts/record-test-evidence.mjs",
+    "build:server": "tsc -p tsconfig.build.json",
+    "lint": "eslint server --max-warnings=0",
+    "lint:report": "eslint server --format json --output-file reports/eslint.json --max-warnings=0",
+    "duplication": "jscpd --config .jscpd.json server",
+    "quality:gate": "tsx scripts/quality-gate.ts",
+    "quality:check": "node scripts/run-quality.mjs"
   },
   "dependencies": {
     "@noble/hashes": "^2.3.0",
@@ -31,10 +45,17 @@
     "react-native-web": "^0.21.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.2.0",
     "@types/pg": "^8.21.0",
     "@types/react": "~19.1.10",
+    "@vitest/coverage-v8": "^5.0.5",
+    "eslint": "^10.13.0",
+    "eslint-plugin-sonarjs": "^4.2.2",
+    "jscpd": "^5.4.2",
     "tsx": "^4.23.12",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
   }
 }

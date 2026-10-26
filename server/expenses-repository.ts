@@ -50,8 +50,26 @@ interface ExpenseRow {
 
 export async function createConfirmedWhatsappExpense(payload: ConfirmedBotExpensePayload): Promise<CreateExpenseResult> {
   return withTransaction(async (client) => {
-    const duplicate = await findDuplicateExpense(client, payload.sourceMessageIds)
+    const messageIds = Array.from(new Set([...payload.sourceMessageIds, payload.messageId]))
+    // Orden global de locks para serializar solicitudes con cualquier mensaje compartido.
+    // El lock dura hasta COMMIT/ROLLBACK; una colision de hash solo agrega serializacion.
+    await client.query(`
+      SELECT pg_advisory_xact_lock(lock_key)
+      FROM (
+        SELECT DISTINCT hashtextextended(message_id, 0) AS lock_key
+        FROM unnest($1::text[]) AS message_id
+        ORDER BY lock_key
+      ) AS message_locks
+    `, [messageIds])
+    const duplicate = await findDuplicateExpense(client, messageIds)
     if (duplicate) {
+      if (duplicate.userId !== payload.userId) {
+        return {
+          status: "invalid",
+          action: "show_errors",
+          errors: [error("sourceMessageIds", "message_conflict", "Un mensaje ya fue utilizado en otra solicitud.")],
+        }
+      }
       return {
         status: "duplicate",
         action: "ignore_duplicate",
@@ -69,8 +87,9 @@ export async function createConfirmedWhatsappExpense(payload: ConfirmedBotExpens
       }
     }
 
-    const expense = await insertExpense(client, payload, references.userId!, references.categoryCode!, references.paymentMethodId!)
-    await insertProcessedMessages(client, payload.sourceMessageIds, references.userId!, expense.id)
+    const normalizedPayload = { ...payload, sourceMessageIds: messageIds }
+    const expense = await insertExpense(client, normalizedPayload, references.userId!, references.categoryCode!, references.paymentMethodId!)
+    await insertProcessedMessages(client, messageIds, references.userId!, expense.id)
 
     return {
       status: "created",
@@ -223,7 +242,6 @@ async function insertProcessedMessages(client: PoolClient, messageIds: string[],
       `
         INSERT INTO whatsapp_processed_messages (message_id, user_id, expense_id)
         VALUES ($1, $2, $3)
-        ON CONFLICT (message_id) DO NOTHING
       `,
       [messageId, userId, expenseId],
     )

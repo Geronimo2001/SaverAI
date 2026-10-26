@@ -1,0 +1,20 @@
+{
+  "archivedAt": "2026-10-26T02:48:40.284Z",
+  "commands": [
+    "npm run test:coverage",
+    "npm run test:integration",
+    "npm run test:typecheck",
+    "npm run server:typecheck",
+    "npm run typecheck"
+  ],
+  "hashes": {
+    "server/app.ts": "7449f6fd3b9c1286b870b9f07fc845a21884dfaa575f7bc7fbdc9321ae780171",
+    "server/server.ts": "b06a91e700e1b38a9b85646d3342222da39391094aa15a8c898c3545cde408c2",
+    "server/expenses-repository.ts": "9d22745d2f649d6a0eb9342d5012119cd9ecc0200f60ac165774e5edcac9dac0",
+    "server/read-routes.ts": "91eb8c9e1ac86ecaf6fdb26884b4391495982483f979b0ac9ee004962e6d7627",
+    "tests/unit/api.test.ts": "bd42e37f5c8dbe2ddee118efb1b376d4231fa5a86b23816a36d667a198443bcc",
+    "tests/unit/db.test.ts": "58688109f5821e5821c122576d9d4e32d709ed32f7d5176033f9a73fb98f4451",
+    "tests/unit/expenses-repository.test.ts": "67c2a23e7b349cc9e9e4dc67fa2f422007fa866ff759ee5894f3c9d12c877e27",
+    "tests/integration/backend.test.ts": "50942b87a963278691982ddaa7c474543af9fbdcc0a86eab5f8bd22fedc4e7b2"
+  }
+}

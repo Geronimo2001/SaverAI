@@ -1,0 +1,12 @@
+
+ RUN  v5.0.5 /Users/gero/Desktop/gestor_gastos
+
+ ✓ tests/unit/test-database-config.test.ts (11 tests) 2ms
+ ✓ tests/unit/confirmed-expense-validation.test.ts (47 tests) 6ms
+
+ Test Files  2 passed (2)
+      Tests  58 passed (58)
+   Start at  23:20:14
+   Duration  118ms (transform 40%, import 33%, tests 16%, worker 10%)
+
+JSON report written to /Users/gero/Desktop/gestor_gastos/docs/calidad/evidencias/def-001/verde.json

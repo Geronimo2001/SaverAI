@@ -1,0 +1,20 @@
+diff --git a/server/confirmed-expense-validation.ts b/server/confirmed-expense-validation.ts
+index 03f82b6..b906885 100644
+--- a/server/confirmed-expense-validation.ts
++++ b/server/confirmed-expense-validation.ts
+@@ -74,12 +74,13 @@ function parseRequiredString(value: unknown, field: string, errors: ValidationEr
+ 
+ function parseAmount(value: unknown, errors: ValidationError[]) {
+   const amount = typeof value === "number" ? value : typeof value === "string" ? Number(value.replace(",", ".")) : NaN
+-  if (!Number.isFinite(amount) || amount <= 0 || amount > maxAmount) {
++  const roundedAmount = Math.round(amount)
++  if (!Number.isFinite(amount) || amount <= 0 || amount > maxAmount || roundedAmount <= 0) {
+     errors.push(error("expense.amount", "invalid_amount", "El monto debe ser un numero positivo razonable."))
+     return null
+   }
+ 
+-  return Math.round(amount)
++  return roundedAmount
+ }
+ 
+ function parseMerchant(value: unknown, errors: ValidationError[]) {
