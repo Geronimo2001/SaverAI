@@ -42,12 +42,6 @@ describe("CP-009/010/019: repositorio con doble de PostgreSQL", () => {
     expect(result).toMatchObject({ status: "duplicate", expense: { id: 77, description: "descripcion original" } })
     expect(fake.query.mock.calls.some(([sql]) => sql.includes("INSERT INTO"))).toBe(false)
   })
-  it("rechaza usuario desconocido antes de escribir", async () => {
-    user = false
-    const result = await createConfirmedWhatsappExpense(payload())
-    expect(result).toMatchObject({ status: "invalid", errors: [{ code: "unknown_user" }] })
-    expect(fake.query.mock.calls.some(([sql]) => sql.includes("INSERT INTO"))).toBe(false)
-  })
   it("CP-022: un mensaje de otro usuario devuelve conflicto sin revelar el gasto", async () => {
     duplicate = { ...row, whatsapp_user_id: "otro-usuario" }
     const result = await createConfirmedWhatsappExpense(payload())

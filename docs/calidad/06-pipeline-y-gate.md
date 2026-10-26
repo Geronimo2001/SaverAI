@@ -1,5 +1,7 @@
 # Pipeline, compilación y quality gate
 
+Los porcentajes de este documento corresponden a la primera suite. A pedido del equipo se redujeron pruebas duplicadas y de menor prioridad; la medición vigente está en [ajuste de nivel 1](07-ajuste-nivel-1.md). Los reportes históricos se conservan sin modificar.
+
 ## Alcance y referencia inicial
 
 Se evalúa el backend `server/**/*.ts`. La referencia fija es `cf5cc7d7184c79f32acfd22ecaa8b9dca8ca96c1`, HEAD al comenzar el TP y revisión principal de GitHub verificada antes de publicar esta etapa. Los cambios locales previos relevados eran de la interfaz; los archivos del backend coincidían con ese commit.
@@ -67,6 +69,8 @@ Evidencia local: [gate](evidencias/etapa-4/gate-local.json), [ejecución complet
 
 ## Evidencia remota
 
-Pendiente de completar con URLs y estados reales de GitHub Actions. Para demostrar el fallo requerido se utilizará una reproducción controlada y explícita del comportamiento anterior de DEF-001 en una rama de trabajo, seguida de su corrección, conservando las mismas pruebas. No se presentará esa reproducción como un descubrimiento nuevo ni se fusionará la versión defectuosa a `main`.
+La primera ejecución remota de la suite completa fue satisfactoria: [GitHub Actions 40263110386](https://github.com/Geronimo2001/SaverAI/actions/runs/40263110386), commit `471052a5237d53a6dac6ff9adaf3d3c9273e9a0e`, rama `codex/calidad-nivel-1`. Sus porcentajes originales coinciden con el resultado local de esta etapa. La suite se ajustó después: no presentar esa ejecución antigua como evidencia de los porcentajes reducidos.
+
+Sigue pendiente la ejecución remota fallida por un defecto real requerida por la guía. Si se reproduce el comportamiento anterior de DEF-001 en una rama de trabajo, debe identificarse como reproducción controlada seguida de corrección, conservando las mismas pruebas. No se presentará como un descubrimiento nuevo ni se fusionará la versión defectuosa a `main`.
 
 Referencias: [GitHub Actions para Node](https://docs.github.com/en/actions/tutorials/build-and-test-code/nodejs), [SonarJS](https://github.com/SonarSource/SonarJS), [jscpd](https://github.com/kucherenko/jscpd).
