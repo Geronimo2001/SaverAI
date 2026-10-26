@@ -56,4 +56,4 @@ Decisión confirmada tras la PoC: k6 por sus umbrales y escenarios explícitos; 
 
 La PoC original se conserva con sus hashes de código y entorno. Posteriormente se ajustó la coordinación del cierre de procesos/conexión; por eso su hash del runner puede diferir de la implementación final. Los resultados de perfiles y CI se conservarán por separado con los hashes correspondientes.
 
-Estado: PoC y perfiles locales ejecutados; integración del comando de calidad implementada; verificación remota pendiente. Los resultados y límites están en [cierre del paso 6](12-resultados-de-carga.md). El equipo debe poder explicar VUs, percentiles, umbrales y diferencias entre carga/stress/esfuerzo sostenido.
+Estado: PoC y perfiles locales ejecutados; comando de calidad implementado y carga/stress verificados en CI con artefactos descargados. Los resultados y límites están en [cierre del paso 6](12-resultados-de-carga.md). El equipo debe poder explicar VUs, percentiles, umbrales y diferencias entre carga/stress/esfuerzo sostenido.

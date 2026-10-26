@@ -13,7 +13,7 @@ Este directorio reúne la documentación versionada del trabajo. Una actividad p
 | 3. Defecto y regresión | Prueba roja, corrección, prueba verde y registro vinculado | DEF-001 verificado localmente y con reproducción histórica roja/verde en CI; commits vinculados; tarea y aportes individuales pendientes |
 | 4. Pruebas por niveles | Unitarias, API, integración con dobles y PostgreSQL de prueba | Ejecutadas; DEF-002/003/004 con regresiones; smoke local del backend compilado ejecutado dos veces; demo final de despliegue pendiente |
 | 5. CI y métricas | Compilación, análisis, cobertura, gate y reportes automáticos | Completado para el backend: CI roja/verde conservada; 60,09 % existente y 90 % nuevo |
-| 6. Carga y herramienta nueva | Stress, esfuerzo sostenido y evaluación en cinco pasos | Plan, herramienta k6 y PoC documentados; load/stress/soak locales ejecutados; CI pendiente |
+| 6. Carga y herramienta nueva | Stress, esfuerzo sostenido y evaluación en cinco pasos | Completado: k6 con cinco pasos; load/stress/soak locales y reportes de load/stress verificados en CI |
 | 7. Entrega y defensa | PDF, ejecuciones CI roja/verde y demostración de despliegue | Pendiente |
 
 ## Documentos

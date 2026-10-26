@@ -1,0 +1,57 @@
+{
+  "startedAt": "2026-10-26T13:11:18.364Z",
+  "finishedAt": "2026-10-26T13:12:41.445Z",
+  "passed": true,
+  "stages": [
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "durationMs": 2238
+    },
+    {
+      "name": "server:typecheck",
+      "exitCode": 0,
+      "durationMs": 927
+    },
+    {
+      "name": "test:typecheck",
+      "exitCode": 0,
+      "durationMs": 1395
+    },
+    {
+      "name": "build:server",
+      "exitCode": 0,
+      "durationMs": 866
+    },
+    {
+      "name": "lint:report",
+      "exitCode": 0,
+      "durationMs": 1448
+    },
+    {
+      "name": "duplication",
+      "exitCode": 0,
+      "durationMs": 117
+    },
+    {
+      "name": "test:coverage",
+      "exitCode": 0,
+      "durationMs": 1032
+    },
+    {
+      "name": "test:integration",
+      "exitCode": 0,
+      "durationMs": 1563
+    },
+    {
+      "name": "quality:gate",
+      "exitCode": 0,
+      "durationMs": 338
+    },
+    {
+      "name": "test:performance:ci",
+      "exitCode": 0,
+      "durationMs": 73156
+    }
+  ]
+}

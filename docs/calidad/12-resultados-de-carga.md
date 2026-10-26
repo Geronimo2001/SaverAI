@@ -37,7 +37,18 @@ Este ensayo corto no analiza fugas de memoria ni estabilidad durante horas; eso 
 
 Los resultados y resúmenes de carga/stress se generan en `reports/performance/`, se agregan al resumen de Actions y se incluyen en el artefacto ya configurado del workflow. Soak queda como comando manual; sus resultados locales se versionan como evidencia.
 
-Verificación remota pendiente de publicar la rama y descargar su artefacto.
+Verificado en [GitHub Actions 40328308100](https://github.com/Geronimo2001/SaverAI/actions/runs/40328308100), commit **10fcd2ea351e7eb5a737ada07cf9867fe1f78ef8**: **success**. Se descargó el artefacto real y se verificaron los hashes de los scripts contra la implementación.
+
+| Perfil CI | Recorridos | Solicitudes | p95 HTTP | p99 HTTP | Errores |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| load | 149 | 596 | 24,78 ms | 92,76 ms | 0 % |
+| stress | 1849 | 7396 | 49,57 ms | 138,48 ms | 0 % |
+
+Todas las comprobaciones, recuperación y limpieza satisfactorias; gate con 121 pruebas y coberturas 60,09 %/90 %. Los tiempos de CI son superiores a los locales y cumplen los mismos umbrales iniciales; no se presentan como un empeoramiento entre versiones porque cambian equipo y entorno. Los metadatos incluyen las versiones reales del runner, Node, PostgreSQL y k6.
+
+Evidencia descargada: [pipeline](evidencias/carga/ci/pipeline-local.json), [gate](evidencias/carga/ci/quality-gate.json), [carga/stress y limpieza](evidencias/carga/ci/ci-run.json), [reporte k6 load](evidencias/carga/ci/load-k6.json) y [reporte k6 stress](evidencias/carga/ci/stress-k6.json).
+
+**Paso 6 completado para nivel 1 dentro del alcance declarado**: plan, scripts ejecutables, carga/stress/esfuerzo sostenido corto ejecutados, herramienta incorporada con cinco pasos y reportes automáticos de carga/stress verificados en CI.
 
 ## Qué falta después
 

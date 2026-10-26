@@ -16,7 +16,7 @@ npm run test:smoke
 
 El comando compila el backend, prepara la base aislada y ejecuta el smoke. No hace falta iniciar el servidor a mano: el script elige un puerto libre, crea un secreto temporal y lanza el backend como otro proceso. No se necesita una URL pública.
 
-`npm run test:all` ejecuta unitarias, integración y smoke en secuencia. El smoke no se agrega a la medición de cobertura unitaria ni al conteo histórico de 121 pruebas: es un recorrido adicional CP-021.
+`npm run test:all` ejecuta unitarias, integración, smoke y los perfiles load/stress/soak en secuencia desde la incorporación del paso 6. El smoke no se agrega a la medición de cobertura unitaria ni al conteo histórico de 121 pruebas: es un recorrido adicional CP-021.
 
 ## Criterios fijados antes de ejecutar
 
