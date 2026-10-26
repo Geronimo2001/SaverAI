@@ -4,6 +4,8 @@ Estado: primera versión. Los criterios siguientes se fijan antes de ejecutar la
 
 Actualización de ejecución: los resultados posteriores a este diseño se registran en [entorno inicial](04-entorno-de-pruebas.md) y [contrato y resultados actuales](05-contrato-y-resultados.md). Mantener separados criterio previsto y evidencia ejecutada.
 
+El cierre y la matriz con evidencia ejecutada se encuentran en [el informe y cierre técnico](13-cierre-tecnico.md). Esta primera versión conserva los criterios iniciales, sin sustituirlos retrospectivamente.
+
 ## Objetivos medibles
 
 | Perspectiva | Objetivo | Evidencia prevista |
@@ -50,7 +52,7 @@ Los dobles verifican decisiones del código; una prueba contra PostgreSQL aislad
 | REQ-09 Verificar firma | Una escritura sin firma válida se rechaza antes de acceder al repositorio | CP-018 firma válida/ausente/alterada | Unitaria/API | — |
 | REQ-10 Controlar caída | Una falla de base no confirma el alta ni deja registros parciales | CP-019 conexión caída y error de consulta | Integración con dobles | — |
 | REQ-11 Preparar entorno | La migración funciona sobre base vacía y puede repetirse según contrato documentado | CP-020 migración y datos iniciales | Integración | — |
-| REQ-12 Verificar despliegue | Backend operativo, acceso a PostgreSQL y recorrido sintético mínimo satisfactorios | CP-021 smoke | Sistema/smoke | [Smoke local ejecutado](09-smoke-test.md); demo final pendiente |
+| REQ-12 Verificar despliegue | Backend operativo, acceso a PostgreSQL y recorrido sintético mínimo satisfactorios | CP-021 smoke | Sistema/smoke | [Smoke local](09-smoke-test.md) y [nueva copia local demostrada](15-guion-de-defensa.md); aceptación académica pendiente |
 | REQ-13 Proteger respuesta de duplicado | Mensaje ya asociado a otro usuario devuelve conflicto sin exponer el gasto original | CP-022 reutilización por otro usuario | API/integración | DEF-003 |
 
 La unidad monetaria exacta y el tratamiento de decimales requieren una decisión registrada antes de corregir DEF-001. La condición mínima ya verificable es que un resultado válido nunca entregue cero a una columna que lo prohíbe. No cambiar la política monetaria de la tesis sin documentarla.

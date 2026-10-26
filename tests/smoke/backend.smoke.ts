@@ -3,12 +3,14 @@ import { spawn, type ChildProcess } from "node:child_process"
 import { createHash, createHmac, randomUUID } from "node:crypto"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { createServer } from "node:net"
+import { resolve } from "node:path"
 import { setTimeout as delay } from "node:timers/promises"
 import { Client } from "pg"
 import { getTestDatabaseUrl, verifyTestDatabase } from "../../scripts/test-database-config.js"
 
 // CP-021: ejecutar el artefacto compilado en un proceso real, sin dobles.
 const startedAt = new Date().toISOString()
+const backendEntry = resolve(process.env.QUALITY_BACKEND_ENTRY ?? "dist/server/server.js")
 const steps: { name: string; passed: boolean; durationMs: number; error?: string }[] = []
 const userId = `smoke-${randomUUID()}`
 const messageId = `smoke-${randomUUID()}`
@@ -50,7 +52,7 @@ async function freePort() {
 async function startBackend(connectionString: string) {
   const port = await freePort()
   baseUrl = `http://127.0.0.1:${port}`
-  backend = spawn(process.execPath, ["dist/server/server.js"], {
+  backend = spawn(process.execPath, [backendEntry], {
     env: { ...process.env, DATABASE_URL: connectionString, WHATSAPP_WEBHOOK_SECRET: secret,
       PORT: String(port), DOTENV_CONFIG_PATH: "/dev/null" },
     stdio: ["ignore", "pipe", "ignore"],
@@ -158,12 +160,12 @@ async function main() {
     }).catch(() => {})
     await step("Cerrar conexion de pruebas", async () => { await database?.end() }).catch(() => {})
     const hashes: Record<string, string> = {}
-    for (const path of ["tests/smoke/backend.smoke.ts", "dist/server/server.js"]) {
+    for (const path of ["tests/smoke/backend.smoke.ts", backendEntry]) {
       try { hashes[path] = createHash("sha256").update(await readFile(path)).digest("hex") } catch { passed = false }
     }
     await mkdir("reports", { recursive: true })
     await writeFile("reports/smoke-results.json", JSON.stringify({ case: "CP-021", requirement: "REQ-12",
-      mode: "local-compiled-backend", database: "capsaai_quality_test", startedAt, finishedAt: new Date().toISOString(),
+      mode: process.env.QUALITY_BACKEND_ENTRY ? "local-deployed-backend" : "local-compiled-backend", database: "capsaai_quality_test", startedAt, finishedAt: new Date().toISOString(),
       passed, steps, hashes }, null, 2) + "\n")
     console.log(`Smoke ${passed ? "APROBADO" : "RECHAZADO"}. Reporte: reports/smoke-results.json`)
     process.exitCode = passed ? 0 : 1

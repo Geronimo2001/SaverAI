@@ -1,0 +1,43 @@
+{
+  "startedAt": "2026-10-26T13:25:31.874Z",
+  "finishedAt": "2026-10-26T13:28:43.109Z",
+  "passed": true,
+  "releaseRemoved": true,
+  "mode": "new-local-release",
+  "dependencyMode": "existing-node_modules-shared-readonly",
+  "sourceCommit": "05c0206d247e9fb3496672b721794cbe72eccb5a",
+  "artifact": {
+    "server/app.js": "7d2e91e2fc9066914821e9536533fe27588479b1273f2950e150552b45f94ed6",
+    "server/app.js.map": "434d14d24457e089d6863419d720c69324692c8b78692ab0f31b7328118fdd84",
+    "server/config.js": "a1208eced5d7f4c123745500ad736a9b07d2bf402a506c4c1df97b07f0c5cb41",
+    "server/config.js.map": "b55cb4bb87a1397b2201e4415b271d372e0acc6d8ceae98a86b42ba934b7c8b0",
+    "server/confirmed-expense-validation.js": "559a38955ed6a89a35233f90f816ae1ba71841c69b7f0e8c0c2adcfb20308910",
+    "server/confirmed-expense-validation.js.map": "feaa8b94a489d2b33311ebfbed977faf23a0f8bf2287010157f3ae3116ba91c2",
+    "server/db.js": "6758ad6f05236eceabc903282d5f480542f69901c68d66d6cce74000070b8e5a",
+    "server/db.js.map": "795ac022db354e573d22225e7dab9eaf062612f81aafd0a9fd8e5c3fc699fe1d",
+    "server/expenses-repository.js": "dbd29d76aba70d8a8d642e1937ce6448cd8ee1329dde26968ec74d1f5c7ae7a9",
+    "server/expenses-repository.js.map": "f68d0faf0da60f43cbdd681a9cac08fc50780e20890f0202b2a7964fc7a33279",
+    "server/http.js": "d24ac31e0ce0cfc2c6a6707bf65bf3d87a6e98333a4ea641e6b74963fa1d8c3f",
+    "server/http.js.map": "e6d7f4019a752487e57c1440d16a32f31b9eab9422145383e318703ca99a5688",
+    "server/migrate.js": "84fd5637e1f62e86a1456ee7db011346959e4b67939e4d3f0de748aecd8796ce",
+    "server/migrate.js.map": "6970734be39cdbd09826969b6e58dd4aea0fcd5506c3c8d8f99e6c307d977bc5",
+    "server/read-routes.js": "c649496053ad5fc82b7dae4ae833531e9e9148cac3e0945de0ba7c56e056fcdb",
+    "server/read-routes.js.map": "37ee129c605d6eefdc19b3786e6e6323588ce1d4d019c027ece5e3bbc0bfab84",
+    "server/seed-dev.js": "a5e9b93bd9e8c248c05e0d1630e95ec2a6223b9945e3b73fb2d4679cfbefc5e3",
+    "server/seed-dev.js.map": "f43e961237ebf3f9d739c72851e7c2d779c6916d9c1c7d9902fcd7b521e1fc6a",
+    "server/server.js": "f7b92c78e365dee903dd8185ff41d526a2d7837af278ecf800babd2a21d4db07",
+    "server/server.js.map": "33513d459ea0e4cf89e8954e876d6e726c7981c134d48743ef74c5b5929a227a",
+    "server/whatsapp-undo-route.js": "4039fb6995b76a180a5d5f6185f6e3f2bbe823336eccfe384819a4e2639a1f14",
+    "server/whatsapp-undo-route.js.map": "c7c1bc0dfd2a8fe187ef296b42f6f704c2b9a014d8255e82c017d21f46e8544e"
+  },
+  "stages": [
+    {
+      "name": "smoke",
+      "exitCode": 0
+    },
+    {
+      "name": "performance",
+      "exitCode": 0
+    }
+  ]
+}

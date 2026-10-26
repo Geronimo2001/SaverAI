@@ -4,7 +4,7 @@
 
 El script está en `tests/smoke/backend.smoke.ts`; su comando está en `package.json`. Comprueba rápidamente que el backend compilado inicia y completa el recorrido mínimo HTTP → PostgreSQL → respuesta, sin dobles. Complementa las unitarias y la integración con una comprobación del punto de arranque real `dist/server/server.js`.
 
-Para nivel 1 se invoca manualmente. No está conectado al workflow ni a un despliegue remoto. Esta ejecución comprueba una instancia local recién iniciada del artefacto compilado; la demostración final de despliegue del TP sigue pendiente.
+Para nivel 1 se invoca manualmente. No está conectado al workflow ni a un despliegue remoto. Esta ejecución comprueba una instancia local recién iniciada del artefacto compilado; la nueva copia desplegada localmente y su demostración posterior están en el documento 15.
 
 ## Preparación y ejecución con un comando
 

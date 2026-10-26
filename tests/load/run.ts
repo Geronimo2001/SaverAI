@@ -9,6 +9,7 @@ import { setTimeout as delay } from "node:timers/promises"
 import { Client } from "pg"
 import { getTestDatabaseUrl, verifyTestDatabase } from "../../scripts/test-database-config.js"
 
+const backendEntry = resolve(process.env.QUALITY_BACKEND_ENTRY ?? "dist/server/server.js")
 const requested = process.argv[2]
 const profiles = requested === "all" ? ["load", "stress", "soak"] : requested === "ci" ? ["load", "stress"] : [requested]
 assert(profiles.every(p => ["poc", "probe", "load", "stress", "soak"].includes(p)), "Perfil de carga invalido")
@@ -48,7 +49,7 @@ async function startBackend(connectionString: string) {
   const port = address.port
   await new Promise<void>((done, fail) => probe.close(e => e ? fail(e) : done()))
   baseUrl = "http://127.0.0.1:" + port
-  backend = spawn(process.execPath, ["dist/server/server.js"], {
+  backend = spawn(process.execPath, [backendEntry], {
     env: { ...process.env, DATABASE_URL: connectionString, WHATSAPP_WEBHOOK_SECRET: secret,
       PORT: String(port), DOTENV_CONFIG_PATH: "/dev/null" }, stdio: ["ignore", "pipe", "ignore"],
   })
@@ -125,7 +126,7 @@ async function main() {
     report.environment.k6 = execFileSync(binary, ["version"], { encoding: "utf8" }).trim()
     assert(report.environment.k6.startsWith("k6 v2.3.0"), "Version de k6 inesperada")
     report.environment.gitCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
-    for (const file of ["tests/load/workflow.js", "tests/load/run.ts", ...profiles.map(p => "tests/load/" + (p === "probe" ? "poc" : p) + ".js"), "dist/server/server.js"]) {
+    for (const file of ["tests/load/workflow.js", "tests/load/run.ts", ...profiles.map(p => "tests/load/" + (p === "probe" ? "poc" : p) + ".js"), backendEntry]) {
       report.environment.sourceHashes[file] = createHash("sha256").update(await readFile(file)).digest("hex")
     }
     for (const user of users) {

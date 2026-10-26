@@ -1,0 +1,11 @@
+OK: Destino aislado y fixtures sinteticos
+OK: Arranque del backend compilado
+OK: GET /health: backend disponible
+OK: GET /categories: acceso real a PostgreSQL
+OK: Alta firmada: gasto persistido
+OK: Consulta: recupera el gasto creado
+OK: Borrado firmado y consulta vacia
+OK: Detener proceso de backend
+OK: Eliminar solo el usuario sintetico de esta ejecucion
+OK: Cerrar conexion de pruebas
+Smoke APROBADO. Reporte: reports/smoke-results.json
