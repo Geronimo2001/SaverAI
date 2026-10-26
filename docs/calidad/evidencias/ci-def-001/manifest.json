@@ -1,0 +1,49 @@
+{
+  "purpose": "Reproduccion historica controlada de DEF-001; no es un descubrimiento nuevo",
+  "branch": "codex/evidencia-ci-def001",
+  "gitObjects": {
+    "base": {
+      "commit": "27cb1bf3968c160fb62fabb1de1e39e317ba5aa0",
+      "tree": "6ff0dd8bdd755cecb26c9e4d4928f494cb3c3c7c",
+      "tests": "fedfc8696d95bde2a299f109a00c3d0d215cceed",
+      "workflow": "8826f8010450508f892403408f90e773ec4585f4",
+      "qualityConfig": "086c9cc84465b512af2f41cf39d19a6a292290e1"
+    },
+    "rojo": {
+      "commit": "aa0685e5f2739dca4c8107674d872f2769335374",
+      "tree": "6e8e688b410c7057fdc9b7562ac235ba7b27518f",
+      "tests": "fedfc8696d95bde2a299f109a00c3d0d215cceed",
+      "workflow": "8826f8010450508f892403408f90e773ec4585f4",
+      "qualityConfig": "086c9cc84465b512af2f41cf39d19a6a292290e1"
+    },
+    "verde": {
+      "commit": "dc5debe7fbb1626af3286a781b2a02bdaa9653bb",
+      "tree": "6ff0dd8bdd755cecb26c9e4d4928f494cb3c3c7c",
+      "tests": "fedfc8696d95bde2a299f109a00c3d0d215cceed",
+      "workflow": "8826f8010450508f892403408f90e773ec4585f4",
+      "qualityConfig": "086c9cc84465b512af2f41cf39d19a6a292290e1"
+    }
+  },
+  "identicalTestsAndPolicy": true,
+  "restoredTreeEqualsBase": true,
+  "filesSha256": {
+    "correccion.patch": "0f583efae2d0dc523011d78004b8c2f1bc67ca5fd9204f69e15b1d1ef86b4550",
+    "rojo/duplicacion.json": "63793452d8bffb486f4885feb97db6d2abb477e9b790d4bc45a60d8e40ffa6a1",
+    "rojo/ejecucion.json": "01c7ab34da799bb1dc380b02a0b403f6e52993dcd7400a2c216f51b5f9dafadd",
+    "rojo/eslint.json": "47d6d7bf41d7b6fae4f937157a053826c1a9e85e5d803fe375a949d497de5df9",
+    "rojo/integration-results.json": "cc7180ecef44572853cba1799797eca0f913f7a5a7471a0f71e2e9633a906fdc",
+    "rojo/pipeline-local.json": "dcd13cffbc6575fa23ac6d816fa982343e78fb07e0d0a1f08dfc47c780cfc83d",
+    "rojo/quality-gate.json": "ea1cdf033013f8c92cf8386e536cdcb8aa67c74628d8129bad7e263e8105a40e",
+    "rojo/summary.md": "0071b1e43d92ed03cdf6389f86291fd24048edd2f2b2b19ea37e358867683c7a",
+    "rojo/unit-results.json": "1ca490cf595851d02e00cbb9354fc1a1b9fd1c9e04d9ba7b533ed5647d8c27af",
+    "verde/cobertura.json": "e91f44ce9ef1aa1950389399f80281ba37d7b13a59f62fb40fbe4bc8692b4507",
+    "verde/duplicacion.json": "48429fbcd8a8f1a7794ff8e8b5b2b36ec070b7f39cb3b830df207c227f338036",
+    "verde/ejecucion.json": "a153c955dba34caaffaa53f7a15cd660aa815fb79c8f9535a30ce35c9eeee2e0",
+    "verde/eslint.json": "47d6d7bf41d7b6fae4f937157a053826c1a9e85e5d803fe375a949d497de5df9",
+    "verde/integration-results.json": "85423aee19988c5469e07d03ea94666a1171ea3c4514b8ad28e4b884753cdae7",
+    "verde/pipeline-local.json": "95b4cae751c7712daa0bd7819031eae96eb1a5f54218604335e50e3ed1b5b401",
+    "verde/quality-gate.json": "86f6a231d38ea088eabd4942cbbe84255bdc8c389e7b168e756d9c5edee25c5c",
+    "verde/summary.md": "7f429f6573ffa096b9e7cc0e62b0eaf278e94b5e559294cb483ad77b0d63b76b",
+    "verde/unit-results.json": "dc648bf901c01a66b3bab3e7d48a3aaefeb7a284709bb3281901b4af59972872"
+  }
+}

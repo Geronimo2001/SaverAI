@@ -10,9 +10,9 @@ Este directorio reúne la documentación versionada del trabajo. Una actividad p
 | --- | --- | --- |
 | 1. Alcance y diagnóstico | Estado inicial, requisitos, riesgos y criterios de aceptación | Documentado; criterios propuestos para el módulo |
 | 2. Preparación de pruebas | Comando de pruebas y entorno PostgreSQL aislado | Preparado; suite priorizada actual: 94 unitarias y 27 de integración satisfactorias |
-| 3. Defecto y regresión | Prueba roja, corrección, prueba verde y registro vinculado | DEF-001 corregido y verificado localmente; evidencia CI y vínculo con tarea/commit pendientes |
+| 3. Defecto y regresión | Prueba roja, corrección, prueba verde y registro vinculado | DEF-001 verificado localmente y con reproducción histórica roja/verde en CI; commits vinculados; tarea y aportes individuales pendientes |
 | 4. Pruebas por niveles | Unitarias, API, integración con dobles y PostgreSQL de prueba | Ejecutadas; DEF-002/003/004 corregidos con regresiones; smoke de despliegue pendiente |
-| 5. CI y métricas | Compilación, análisis, cobertura, gate y reportes automáticos | Paso actual: ajuste a 60,09 % existente y 90 % nuevo aprobado localmente; hay CI verde previa, falta verificar la nueva revisión y conservar CI roja por defecto real |
+| 5. CI y métricas | Compilación, análisis, cobertura, gate y reportes automáticos | Completado para el backend: CI roja/verde conservada; 60,09 % existente y 90 % nuevo |
 | 6. Carga y herramienta nueva | Stress, esfuerzo sostenido y evaluación en cinco pasos | Pendiente |
 | 7. Entrega y defensa | PDF, ejecuciones CI roja/verde y demostración de despliegue | Pendiente |
 
@@ -25,6 +25,7 @@ Este directorio reúne la documentación versionada del trabajo. Una actividad p
 - [Contrato de integración y resultados de API/repositorio](05-contrato-y-resultados.md).
 - [Pipeline y quality gate](06-pipeline-y-gate.md).
 - [Suite priorizada y estado actual del paso 5](07-ajuste-nivel-1.md).
+- [Cierre del paso 5: evidencia CI roja y verde](08-evidencia-ci-roja-verde.md).
 
 ## Reglas de trabajo
 

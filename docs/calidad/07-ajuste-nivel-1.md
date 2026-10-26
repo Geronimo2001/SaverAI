@@ -34,11 +34,10 @@ Evidencia de esta ejecución local: [gate](evidencias/ajuste-nivel-1/gate.json),
 
 ## Dónde estamos
 
-Estamos en el **paso 5: pipeline y métricas**. La compilación, el análisis, los reportes y el gate ya están implementados. La primera versión pasó en [GitHub Actions](https://github.com/Geronimo2001/SaverAI/actions/runs/40263110386). Esa ejecución corresponde a la suite anterior, no a esta reducción.
+El **paso 5: pipeline y métricas** quedó cerrado para el backend. La compilación, el análisis, los reportes y el gate están implementados; el contraste remoto posterior está en [evidencia CI roja/verde](08-evidencia-ci-roja-verde.md).
 
-Para cerrar el paso 5:
+La revisión ajustada `27cb1bf3968c160fb62fabb1de1e39e317ba5aa0` pasó en [GitHub Actions 40265169272](https://github.com/Geronimo2001/SaverAI/actions/runs/40265169272). Se descargó el artefacto real y se verificó que coincida con los conteos locales: 137/228 líneas existentes, 45/50 nuevas y 121 pruebas satisfactorias. Se conservan [metadatos de CI](evidencias/ajuste-nivel-1/ci-verde.json) y [gate de CI](evidencias/ajuste-nivel-1/gate-ci.json). Esta es la ejecución verde correspondiente a la suite reducida.
 
-1. Publicar y verificar esta revisión con la suite reducida, archivando los reportes reales de la nueva ejecución verde.
-2. Obtener y conservar una ejecución CI fallida que detecte un defecto real; las evidencias rojas actuales son locales. Si se recrea uno ya corregido, declararlo como reproducción histórica controlada.
+Se conservó una ejecución CI fallida por DEF-001 y otra verde tras restaurar su corrección, sin modificar los tests. Es una reproducción histórica controlada, documentada con sus reportes y commits en el documento siguiente.
 
 Después siguen el smoke de despliegue, el paso 6 (plan y scripts de carga/stress/esfuerzo sostenido, resultados y herramienta nueva en cinco pasos) y el paso 7 (PDF, conclusiones y demostración). La aceptación académica del alcance del backend y de PostgreSQL local como integración externa continúa pendiente.

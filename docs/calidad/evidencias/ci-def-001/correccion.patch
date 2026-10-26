@@ -1,0 +1,13 @@
+diff --git a/server/confirmed-expense-validation.ts b/server/confirmed-expense-validation.ts
+index 936a7ff..068a107 100644
+--- a/server/confirmed-expense-validation.ts
++++ b/server/confirmed-expense-validation.ts
+@@ -77,7 +77,7 @@ function parseAmount(value: unknown, errors: ValidationError[]) {
+   if (typeof value === "number") amount = value
+   else if (typeof value === "string") amount = Number(value.replace(",", "."))
+   const roundedAmount = Math.round(amount)
+-  if (!Number.isFinite(amount) || amount <= 0 || amount > maxAmount) {
++  if (!Number.isFinite(amount) || amount <= 0 || amount > maxAmount || roundedAmount <= 0) {
+     errors.push(error("expense.amount", "invalid_amount", "El monto debe ser un numero positivo razonable."))
+     return null
+   }

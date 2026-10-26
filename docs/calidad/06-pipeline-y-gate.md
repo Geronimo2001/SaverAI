@@ -71,6 +71,6 @@ Evidencia local: [gate](evidencias/etapa-4/gate-local.json), [ejecución complet
 
 La primera ejecución remota de la suite completa fue satisfactoria: [GitHub Actions 40263110386](https://github.com/Geronimo2001/SaverAI/actions/runs/40263110386), commit `471052a5237d53a6dac6ff9adaf3d3c9273e9a0e`, rama `codex/calidad-nivel-1`. Sus porcentajes originales coinciden con el resultado local de esta etapa. La suite se ajustó después: no presentar esa ejecución antigua como evidencia de los porcentajes reducidos.
 
-Sigue pendiente la ejecución remota fallida por un defecto real requerida por la guía. Si se reproduce el comportamiento anterior de DEF-001 en una rama de trabajo, debe identificarse como reproducción controlada seguida de corrección, conservando las mismas pruebas. No se presentará como un descubrimiento nuevo ni se fusionará la versión defectuosa a `main`.
+La ejecución remota fallida y la posterior verde ya se conservan en [evidencia CI roja/verde](08-evidencia-ci-roja-verde.md). Corresponden a una reproducción histórica controlada de DEF-001 en una rama independiente, con las mismas pruebas en ambas revisiones. La versión defectuosa no se fusionó a `main`.
 
 Referencias: [GitHub Actions para Node](https://docs.github.com/en/actions/tutorials/build-and-test-code/nodejs), [SonarJS](https://github.com/SonarSource/SonarJS), [jscpd](https://github.com/kucherenko/jscpd).
