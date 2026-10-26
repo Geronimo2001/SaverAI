@@ -1,0 +1,16 @@
+{
+  "profile": "poc",
+  "exitCode": 0,
+  "passed": true,
+  "requests": 4,
+  "requestsPerSecond": 14.59859342552345,
+  "httpFailureRate": 0,
+  "checksRate": 1,
+  "attemptedCycles": 1,
+  "completedCycles": 1,
+  "iterations": 1,
+  "p95Ms": 16.974799999999995,
+  "p99Ms": 19.22216,
+  "averageMs": 5.6275,
+  "originalReport": "reports/performance/poc-k6.json"
+}

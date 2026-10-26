@@ -20,14 +20,21 @@
     "test:db:prepare": "tsx scripts/prepare-test-db.ts",
     "test:integration": "npm run test:db:prepare && vitest run --config vitest.integration.config.mts",
     "test:smoke": "npm run build:server && npm run test:db:prepare && tsx tests/smoke/backend.smoke.ts",
-    "test:all": "npm run test:unit && npm run test:integration && npm run test:smoke",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:smoke && npm run test:performance",
     "test:evidence": "node scripts/record-test-evidence.mjs",
     "build:server": "tsc -p tsconfig.build.json",
     "lint": "eslint server --max-warnings=0",
     "lint:report": "eslint server --format json --output-file reports/eslint.json --max-warnings=0",
     "duplication": "jscpd --config .jscpd.json server",
     "quality:gate": "tsx scripts/quality-gate.ts",
-    "quality:check": "node scripts/run-quality.mjs"
+    "quality:check": "node scripts/run-quality.mjs",
+    "test:load:poc": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts poc",
+    "test:load:probe": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts probe",
+    "test:load": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts load",
+    "test:stress": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts stress",
+    "test:soak": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts soak",
+    "test:performance": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts all",
+    "test:performance:ci": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts ci"
   },
   "dependencies": {
     "@noble/hashes": "^2.3.0",

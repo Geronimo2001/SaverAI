@@ -1,0 +1,61 @@
+{
+  "startedAt": "2026-10-26T13:04:56.039Z",
+  "finishedAt": "2026-10-26T13:06:06.719Z",
+  "passed": true,
+  "cleanupPassed": true,
+  "environment": {
+    "node": "v24.15.0",
+    "os": "darwin",
+    "release": "25.5.0",
+    "arch": "arm64",
+    "cpus": 10,
+    "cpu": "Apple M4",
+    "database": "capsaai_quality_test",
+    "postgres": "15.17 (Homebrew)",
+    "k6": "k6 v2.3.0 (commit/e088784614, go1.26.8, darwin/arm64)",
+    "gitCommit": "3d3bb8a51ec759d9a520e216f479fa53421e5d95",
+    "sourceHashes": {
+      "tests/load/workflow.js": "d8c62cc87149013429cb0f151d75e144ecc3bd1d59efe7a437a5ec4d9c46e982",
+      "tests/load/run.ts": "d454a8581fbf295522ea04728c74c50e07f56e2858eb7aafb1093c711536763b",
+      "tests/load/load.js": "da30912b4379572911c718d93d3de0be5ee99b1ff85b4ee2f3ec4073f2b9e71b",
+      "tests/load/stress.js": "87e71e4f4a16fb367ee63ec1c8989f0b21e7b15628130762abae9e40972f6d55",
+      "dist/server/server.js": "f7b92c78e365dee903dd8185ff41d526a2d7837af278ecf800babd2a21d4db07"
+    }
+  },
+  "profiles": [
+    {
+      "profile": "load",
+      "exitCode": 0,
+      "passed": true,
+      "requests": 624,
+      "requestsPerSecond": 30.99547788892383,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 156,
+      "completedCycles": 156,
+      "iterations": 156,
+      "p95Ms": 4.519449999999999,
+      "p99Ms": 5.3094,
+      "averageMs": 1.6821939102564114,
+      "maxVUs": 2,
+      "originalReport": "reports/performance/load-k6.json"
+    },
+    {
+      "profile": "stress",
+      "exitCode": 0,
+      "passed": true,
+      "requests": 8332,
+      "requestsPerSecond": 165.88803286478458,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 2083,
+      "completedCycles": 2083,
+      "iterations": 2083,
+      "p95Ms": 8.909899999999999,
+      "p99Ms": 13.87538,
+      "averageMs": 2.7893464954392586,
+      "maxVUs": 20,
+      "originalReport": "reports/performance/stress-k6.json"
+    }
+  ]
+}

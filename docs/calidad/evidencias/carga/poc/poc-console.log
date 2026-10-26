@@ -1,0 +1,18 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: tests/load/poc.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 45s max duration (incl. graceful stop):
+              * workflow: 1 iterations shared among 1 VUs (maxDuration: 15s, gracefulStop: 30s)
+
+
+running (00.3s), 0/1 VUs, 1 complete and 0 interrupted iterations
+workflow ✓ [ 100% ] 1 VUs  00.3s/15s  1/1 shared iters

@@ -1,0 +1,16 @@
+{
+  "profile": "probe",
+  "exitCode": 99,
+  "passed": false,
+  "requests": 4,
+  "requestsPerSecond": 14.670123925871865,
+  "httpFailureRate": 0,
+  "checksRate": 1,
+  "attemptedCycles": 1,
+  "completedCycles": 1,
+  "iterations": 1,
+  "p95Ms": 15.352599999999997,
+  "p99Ms": 17.334519999999998,
+  "averageMs": 5.116,
+  "originalReport": "reports/performance/probe-k6.json"
+}
