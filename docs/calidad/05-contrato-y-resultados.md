@@ -1,5 +1,7 @@
 # Contrato de integración y resultados de API/repositorio
 
+Este documento conserva la fotografía histórica de la etapa 3. Las mediciones vigentes están en 07, 12 y el informe de cierre; no interpretar sus conteos antiguos como los actuales.
+
 ## Alcance de esta etapa
 
 Se probó el recorrido HTTP → validación → repositorio → PostgreSQL → respuesta sobre `capsaai_quality_test`, con datos sintéticos y un servidor en un puerto temporal de `127.0.0.1`. No se ejecutó WhatsApp real ni la interfaz móvil.

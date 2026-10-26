@@ -2,7 +2,7 @@
 
 ## DEF-001 — Monto positivo aceptado se convierte en cero
 
-- Estado: **corregido y verificado localmente y en CI; tarea y aportes individuales pendientes**.
+- Estado: **corregido y verificado localmente y en CI; issue #7 vinculado; aportes individuales pendientes**.
 - Fecha de detección: 25 de octubre de 2026.
 - Requisito / caso: REQ-01 / CP-003 del plan de pruebas.
 - Ubicación: `server/confirmed-expense-validation.ts`, función `parseAmount`.
@@ -43,11 +43,11 @@ La modificación aplica al validador del backend. El validador de la simulación
 
 La [reproducción histórica controlada en CI](08-evidencia-ci-roja-verde.md) conserva el contraste remoto: [rojo](https://github.com/Geronimo2001/SaverAI/actions/runs/40265714889), commit `aa0685e5f2739dca4c8107674d872f2769335374`, y [verde](https://github.com/Geronimo2001/SaverAI/actions/runs/40265838359), commit de restauración `dc5debe7fbb1626af3286a781b2a02bdaa9653bb`. Se mantuvieron exactamente las mismas pruebas. La corrección original ya estaba incluida en `471052a5237d53a6dac6ff9adaf3d3c9273e9a0e`.
 
-Pendiente: vincular tarea y aportes humanos efectivamente realizados. La ejecución técnica fue asistida por Codex; la identidad Git configurada no demuestra por sí sola autoría individual del trabajo. No se asigna un responsable humano sin evidencia de su participación.
+Seguimiento: [GitHub Issue #7](https://github.com/Geronimo2001/SaverAI/issues/7), registro retrospectivo cerrado por corrección verificada. Pendiente: aportes humanos efectivamente realizados. La ejecución técnica fue asistida por Codex; la identidad Git configurada no demuestra por sí sola autoría individual del trabajo. No se asigna un responsable humano sin evidencia de su participación.
 
 ## DEF-002 — Altas concurrentes con origen compartido duplican gastos
 
-- Estado: corregido y verificado localmente; vínculo con tarea, commit y CI pendiente.
+- Estado: corregido y verificado localmente y en CI. Seguimiento: [Issue #8](https://github.com/Geronimo2001/SaverAI/issues/8). Corrección incluida en `471052a`; regresiones en [CI 40328308100](https://github.com/Geronimo2001/SaverAI/actions/runs/40328308100). Registro retrospectivo cerrado por corrección previa; aportes individuales pendientes.
 - Requisito / caso: REQ-05 / CP-011.
 - Severidad: alta por duplicar registros financieros.
 - Entorno: API local y PostgreSQL 15.17, exclusivamente `capsaai_quality_test`.
@@ -61,7 +61,7 @@ Pendiente: vincular tarea y aportes humanos efectivamente realizados. La ejecuci
 
 ## DEF-003 — Respuesta de duplicado puede revelar un gasto de otro usuario
 
-- Estado: corregido y verificado localmente; vínculo con tarea, commit y CI pendiente.
+- Estado: corregido y verificado localmente y en CI. Seguimiento: [Issue #9](https://github.com/Geronimo2001/SaverAI/issues/9). Corrección incluida en `471052a`; regresiones en [CI 40328308100](https://github.com/Geronimo2001/SaverAI/actions/runs/40328308100). Registro retrospectivo cerrado por corrección previa; aportes individuales pendientes.
 - Requisito / caso: REQ-13 / CP-022.
 - Severidad: alta por exposición de datos de otro usuario en la respuesta.
 - Entorno: API local con firma sintética válida y dos usuarios sintéticos en la base de pruebas.
@@ -75,14 +75,14 @@ Pendiente: vincular tarea y aportes humanos efectivamente realizados. La ejecuci
 
 ## DEF-004 — Períodos inválidos provocan error de base o se ignoran
 
-- Estado: corregido y verificado localmente; vínculo con tarea, commit y CI pendiente.
+- Estado: corregido y verificado localmente y en CI. Seguimiento: [Issue #10](https://github.com/Geronimo2001/SaverAI/issues/10). Corrección incluida en `471052a`; regresiones en [CI 40328308100](https://github.com/Geronimo2001/SaverAI/actions/runs/40328308100). Registro retrospectivo cerrado por corrección previa; aportes individuales pendientes.
 - Requisito / caso: REQ-07 / CP-015.
 - Severidad: media por respuesta incorrecta y filtrado inesperado.
 - Pasos: consultar gastos del usuario sintético con `period` igual a `2026-13`, `2026-00`, `0000-01`, `texto` o cadena vacía.
 - Esperado: HTTP 400 por período inválido, sin consultar PostgreSQL.
 - Obtenido antes: 500 para los tres primeros por fecha fuera de rango en SQL; 200 para texto y vacío, ignorando el filtro.
 - Corrección: si `period` está presente, validar formato YYYY-MM, año distinto de 0000 y mes entre 01 y 12; responder `invalid_period` antes de acceder a la base. Sin parámetro se conserva la consulta de todos los períodos del usuario.
-- Regresión: cinco entradas en integración y cuatro en API con doble, donde también se comprueba ausencia de consulta SQL.
+- Regresión: cinco entradas en integración y cinco unitarias de lectura con doble, donde también se comprueba ausencia de consulta SQL.
 - Evidencia: [integración roja](evidencias/etapa-3/integracion-rojo.json), [verde](evidencias/etapa-3/integracion-verde.json) y [parche](evidencias/etapa-3/correcciones.patch).
 
 Los siete fallos de la ejecución roja de esta etapa corresponden a un caso de DEF-002, uno de DEF-003 y cinco de DEF-004. La suite de integración completa pasa después de corregir. No son siete defectos distintos ni ejecuciones de CI.

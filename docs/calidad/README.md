@@ -10,11 +10,11 @@ Este directorio reúne la documentación versionada del trabajo. Una actividad p
 | --- | --- | --- |
 | 1. Alcance y diagnóstico | Estado inicial, requisitos, riesgos y criterios de aceptación | Documentado; criterios propuestos para el módulo |
 | 2. Preparación de pruebas | Comando de pruebas y entorno PostgreSQL aislado | Preparado; suite priorizada actual: 94 unitarias y 27 de integración satisfactorias |
-| 3. Defecto y regresión | Prueba roja, corrección, prueba verde y registro vinculado | DEF-001 verificado localmente y con reproducción histórica roja/verde en CI; commits vinculados; tarea y aportes individuales pendientes |
-| 4. Pruebas por niveles | Unitarias, API, integración con dobles y PostgreSQL de prueba | Ejecutadas; DEF-002/003/004 con regresiones; smoke local del backend compilado ejecutado dos veces; demo final de despliegue pendiente |
+| 3. Defecto y regresión | Prueba roja, corrección, prueba verde y registro vinculado | Cuatro defectos corregidos con regresión e issues #7 a #10; CI roja/verde de DEF-001; aportes individuales pendientes |
+| 4. Pruebas por niveles | Unitarias, API, integración con dobles y PostgreSQL de prueba | Ejecutadas; regresiones y smoke; demostración nueva de copia desplegada localmente ejecutada |
 | 5. CI y métricas | Compilación, análisis, cobertura, gate y reportes automáticos | Completado para el backend: CI roja/verde conservada; 60,09 % existente y 90 % nuevo |
 | 6. Carga y herramienta nueva | Stress, esfuerzo sostenido y evaluación en cinco pasos | Completado: k6 con cinco pasos; load/stress/soak locales y reportes de load/stress verificados en CI |
-| 7. Entrega y defensa | PDF, ejecuciones CI roja/verde y demostración de despliegue | Pendiente |
+| 7. Entrega y defensa | PDF, ejecuciones CI roja/verde y demostración de despliegue | PDF de 12 páginas revisado, demo local ejecutada y guion preparado; aceptación académica y evidencia individual pendientes |
 
 ## Documentos
 
@@ -30,6 +30,10 @@ Este directorio reúne la documentación versionada del trabajo. Una actividad p
 - [Plan de carga y criterios previos](10-plan-de-carga.md).
 - [Evaluación de herramienta en cinco pasos](11-herramienta-de-carga.md).
 - [Resultados y estado del paso 6](12-resultados-de-carga.md).
+- [Cierre técnico, PDF y pendientes declarados](13-cierre-tecnico.md).
+- [Tareas, integrantes y aporte conjunto](14-registro-de-entrega.md).
+- [Guion de demostración y defensa](15-guion-de-defensa.md).
+- [Informe PDF](../../output/pdf/Informe_Calidad_Nivel1_CapsaAI.pdf).
 
 ## Reglas de trabajo
 

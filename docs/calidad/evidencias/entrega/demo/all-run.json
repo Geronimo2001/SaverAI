@@ -1,0 +1,79 @@
+{
+  "startedAt": "2026-10-26T13:25:32.384Z",
+  "finishedAt": "2026-10-26T13:28:43.097Z",
+  "passed": true,
+  "cleanupPassed": true,
+  "environment": {
+    "node": "v24.15.0",
+    "os": "darwin",
+    "release": "25.5.0",
+    "arch": "arm64",
+    "cpus": 10,
+    "cpu": "Apple M4",
+    "database": "capsaai_quality_test",
+    "postgres": "15.17 (Homebrew)",
+    "k6": "k6 v2.3.0 (commit/e088784614, go1.26.8, darwin/arm64)",
+    "gitCommit": "05c0206d247e9fb3496672b721794cbe72eccb5a",
+    "sourceHashes": {
+      "tests/load/workflow.js": "d8c62cc87149013429cb0f151d75e144ecc3bd1d59efe7a437a5ec4d9c46e982",
+      "tests/load/run.ts": "73c4defe3882f811881e121e65c2f9637bfb62bc1ec82cc786fa074f433cb5cb",
+      "tests/load/load.js": "da30912b4379572911c718d93d3de0be5ee99b1ff85b4ee2f3ec4073f2b9e71b",
+      "tests/load/stress.js": "87e71e4f4a16fb367ee63ec1c8989f0b21e7b15628130762abae9e40972f6d55",
+      "tests/load/soak.js": "4fae549a5a012e4075caa9922032323a52f8a0a81aca2689088d610e3f9dbb83",
+      "/var/folders/06/k2xbt0fd2d94kp4_0m9jf82c0000gn/T/capsa-demo-release-T3wfjf/server/server.js": "f7b92c78e365dee903dd8185ff41d526a2d7837af278ecf800babd2a21d4db07"
+    }
+  },
+  "profiles": [
+    {
+      "profile": "load",
+      "exitCode": 0,
+      "passed": true,
+      "requests": 624,
+      "requestsPerSecond": 31.0202068809182,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 156,
+      "completedCycles": 156,
+      "iterations": 156,
+      "p95Ms": 4.7947,
+      "p99Ms": 5.3435,
+      "averageMs": 1.625272435897435,
+      "maxVUs": 2,
+      "originalReport": "reports/performance/load-k6.json"
+    },
+    {
+      "profile": "stress",
+      "exitCode": 0,
+      "passed": true,
+      "requests": 8480,
+      "requestsPerSecond": 169.39830083116635,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 2120,
+      "completedCycles": 2120,
+      "iterations": 2120,
+      "p95Ms": 4.728099999999999,
+      "p99Ms": 5.736939999999999,
+      "averageMs": 1.6952488207547232,
+      "maxVUs": 20,
+      "originalReport": "reports/performance/stress-k6.json"
+    },
+    {
+      "profile": "soak",
+      "exitCode": 0,
+      "passed": true,
+      "requests": 3720,
+      "requestsPerSecond": 30.948648197572776,
+      "httpFailureRate": 0,
+      "checksRate": 1,
+      "attemptedCycles": 930,
+      "completedCycles": 930,
+      "iterations": 930,
+      "p95Ms": 4.394,
+      "p99Ms": 4.894049999999999,
+      "averageMs": 1.7764381720430114,
+      "maxVUs": 2,
+      "originalReport": "reports/performance/soak-k6.json"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/Geronimo2001/SaverAI/issues/7",
+    "title": "DEF-001: monto positivo se redondeaba a cero",
+    "issue_number": 7,
+    "body": "Registro retrospectivo para el TP de Calidad, nivel 1. El defecto ya estaba corregido antes de crear este issue; la fecha de apertura de este registro no es la fecha de detección ni un tiempo de resolución.\n\n**Trazabilidad:** REQ-01 → CP-003 → DEF-001. Severidad media, prioridad alta por integridad de entrada. Trabajo conjunto declarado por el equipo; no se atribuye autoría individual.\n\n**Reproducción:** con un payload válido de gasto, usar amount=0.1, 0.49 o \"0,1\" y llamar al validador con reloj fijo.\n**Esperado:** rechazar el monto cuyo resultado redondeado es cero antes de persistir.\n**Obtenido originalmente:** valid:true y amount:0, incompatible con CHECK(amount>0) de PostgreSQL.\n**Causa/corrección:** validar también roundedAmount>0, conservando el redondeo monetario original. Corrección incluida en 471052a5237d53a6dac6ff9adaf3d3c9273e9a0e.\n\n**Verificación:** tres casos del validador y un caso HTTP conservados. Reproducción histórica controlada en CI [roja](https://github.com/Geronimo2001/SaverAI/actions/runs/40265714889) y posterior [verde](https://github.com/Geronimo2001/SaverAI/actions/runs/40265838359), sin cambiar los tests. Commit de restauración dc5debe7fbb1626af3286a781b2a02bdaa9653bb. No se presentó como descubrimiento nuevo ni se fusionó el defecto a main.\n\n[Registro detallado y evidencia local](https://github.com/Geronimo2001/SaverAI/blob/main/docs/calidad/03-defectos.md#def-001--monto-positivo-aceptado-se-convierte-en-cero).\n\n**Límite:** corrección del validador backend; no cambia política general de decimales ni la implementación duplicada de la interfaz.",
+    "state": "closed",
+    "user": {
+      "login": "Geronimo2001",
+      "name": "Geronimo2001",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/88061632?v=4",
+      "id": 88061632
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 0,
+    "created_at": "2026-10-26T13:36:28Z",
+    "updated_at": "2026-10-26T13:38:04Z",
+    "closed_at": "2026-10-26T13:38:04Z",
+    "display_url": "https://github.com/Geronimo2001/SaverAI/issues/7",
+    "display_title": "DEF-001: monto positivo se redondeaba a cero"
+  },
+  "url": "https://github.com/Geronimo2001/SaverAI/issues/7",
+  "title": "DEF-001: monto positivo se redondeaba a cero",
+  "display_url": "https://github.com/Geronimo2001/SaverAI/issues/7",
+  "display_title": "DEF-001: monto positivo se redondeaba a cero"
+}

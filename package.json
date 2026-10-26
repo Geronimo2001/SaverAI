@@ -34,7 +34,8 @@
     "test:stress": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts stress",
     "test:soak": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts soak",
     "test:performance": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts all",
-    "test:performance:ci": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts ci"
+    "test:performance:ci": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx tests/load/run.ts ci",
+    "demo:quality": "npm run build:server && npm run test:db:prepare && node scripts/install-k6.mjs && tsx scripts/demo-quality.ts"
   },
   "dependencies": {
     "@noble/hashes": "^2.3.0",

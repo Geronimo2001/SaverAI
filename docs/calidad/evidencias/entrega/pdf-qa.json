@@ -1,0 +1,29 @@
+{
+  "pdfSha256": "e4f68b886b03bf56ce647dbfcb4ed6eb84ab7fdca4daccb7defe7aa199da05ff",
+  "pages": 12,
+  "textAndBoundsPassed": true,
+  "visualPagesReviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "renderDpi": 110,
+  "artifact": "output/pdf/Informe_Calidad_Nivel1_CapsaAI.pdf",
+  "issues": [
+    7,
+    8,
+    9,
+    10
+  ],
+  "sourceCommit": "05c0206d247e9fb3496672b721794cbe72eccb5a",
+  "scope": "Entrega tecnica con pendientes academicos e individuales declarados"
+}

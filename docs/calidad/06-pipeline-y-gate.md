@@ -48,7 +48,7 @@ Requiere `.env.test.local` o `TEST_DATABASE_URL` para la base aislada y PostgreS
 
 Las salidas se regeneran en `reports/`, `coverage/unit/` y `dist/server/`. `reports/pipeline-local.json` contiene tiempos y estados de cada etapa; `quality-gate.json` contiene umbrales, conteos y detalle por archivo; `summary.md` resume el resultado y se publica también como resumen del job en Actions.
 
-El workflow `.github/workflows/quality.yml` se dispara por PR, push a `main` o ramas `codex/**` y ejecución manual. Siempre intenta archivar reportes, cobertura y compilación, incluso cuando falla. No realiza un despliegue ni configura protección de ramas; para impedir merges desde la interfaz de GitHub se deberá exigir el check `quality` en las reglas del repositorio.
+El workflow `.github/workflows/quality.yml` se dispara por PR, push a `main` o ramas `codex/**` y ejecución manual. Siempre intenta archivar reportes, cobertura y compilación, incluso cuando falla. No realiza un despliegue. Posteriormente el equipo configuró la protección de main: PR, check `quality`, una aprobación y aplicación a administradores; no exige rama actualizada. El PR #6 fue fusionado por el equipo tras los checks.
 
 ## Resultado local del 26 de octubre de 2026
 

@@ -1,0 +1,7 @@
+Ejecutando perfil load
+{"profile":"load","exitCode":0,"passed":true,"requests":624,"requestsPerSecond":31.0202068809182,"httpFailureRate":0,"checksRate":1,"attemptedCycles":156,"completedCycles":156,"iterations":156,"p95Ms":4.7947,"p99Ms":5.3435,"averageMs":1.625272435897435,"maxVUs":2,"originalReport":"reports/performance/load-k6.json"}
+Ejecutando perfil stress
+{"profile":"stress","exitCode":0,"passed":true,"requests":8480,"requestsPerSecond":169.39830083116635,"httpFailureRate":0,"checksRate":1,"attemptedCycles":2120,"completedCycles":2120,"iterations":2120,"p95Ms":4.728099999999999,"p99Ms":5.736939999999999,"averageMs":1.6952488207547232,"maxVUs":20,"originalReport":"reports/performance/stress-k6.json"}
+Ejecutando perfil soak
+{"profile":"soak","exitCode":0,"passed":true,"requests":3720,"requestsPerSecond":30.948648197572776,"httpFailureRate":0,"checksRate":1,"attemptedCycles":930,"completedCycles":930,"iterations":930,"p95Ms":4.394,"p99Ms":4.894049999999999,"averageMs":1.7764381720430114,"maxVUs":2,"originalReport":"reports/performance/soak-k6.json"}
+Carga APROBADA; limpieza: true
