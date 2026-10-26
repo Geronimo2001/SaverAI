@@ -1,0 +1,36 @@
+{
+  "case": "CP-021",
+  "requirement": "REQ-12",
+  "mode": "local-compiled-backend",
+  "database": "capsaai_quality_test",
+  "startedAt": "2026-10-26T04:08:01.405Z",
+  "finishedAt": "2026-10-26T04:08:01.408Z",
+  "passed": false,
+  "steps": [
+    {
+      "name": "Destino aislado y fixtures sinteticos",
+      "passed": false,
+      "durationMs": 1,
+      "error": "Fallo de operacion; revisar el entorno de pruebas."
+    },
+    {
+      "name": "Detener proceso de backend",
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "name": "Eliminar solo el usuario sintetico de esta ejecucion",
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "name": "Cerrar conexion de pruebas",
+      "passed": true,
+      "durationMs": 0
+    }
+  ],
+  "hashes": {
+    "tests/smoke/backend.smoke.ts": "c9d24fa9067a57d288f49e66778c2a20151a75bb9a992a92b805e81c52c8b882",
+    "dist/server/server.js": "f7b92c78e365dee903dd8185ff41d526a2d7837af278ecf800babd2a21d4db07"
+  }
+}

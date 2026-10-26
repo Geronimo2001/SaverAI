@@ -1,0 +1,65 @@
+{
+  "case": "CP-021",
+  "requirement": "REQ-12",
+  "mode": "local-compiled-backend",
+  "database": "capsaai_quality_test",
+  "startedAt": "2026-10-26T04:07:44.627Z",
+  "finishedAt": "2026-10-26T04:07:44.873Z",
+  "passed": true,
+  "steps": [
+    {
+      "name": "Destino aislado y fixtures sinteticos",
+      "passed": true,
+      "durationMs": 14
+    },
+    {
+      "name": "Arranque del backend compilado",
+      "passed": true,
+      "durationMs": 67
+    },
+    {
+      "name": "GET /health: backend disponible",
+      "passed": true,
+      "durationMs": 28
+    },
+    {
+      "name": "GET /categories: acceso real a PostgreSQL",
+      "passed": true,
+      "durationMs": 12
+    },
+    {
+      "name": "Alta firmada: gasto persistido",
+      "passed": true,
+      "durationMs": 12
+    },
+    {
+      "name": "Consulta: recupera el gasto creado",
+      "passed": true,
+      "durationMs": 2
+    },
+    {
+      "name": "Borrado firmado y consulta vacia",
+      "passed": true,
+      "durationMs": 4
+    },
+    {
+      "name": "Detener proceso de backend",
+      "passed": true,
+      "durationMs": 100
+    },
+    {
+      "name": "Eliminar solo el usuario sintetico de esta ejecucion",
+      "passed": true,
+      "durationMs": 1
+    },
+    {
+      "name": "Cerrar conexion de pruebas",
+      "passed": true,
+      "durationMs": 2
+    }
+  ],
+  "hashes": {
+    "tests/smoke/backend.smoke.ts": "c9d24fa9067a57d288f49e66778c2a20151a75bb9a992a92b805e81c52c8b882",
+    "dist/server/server.js": "f7b92c78e365dee903dd8185ff41d526a2d7837af278ecf800babd2a21d4db07"
+  }
+}
