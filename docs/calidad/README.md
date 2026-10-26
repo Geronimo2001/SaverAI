@@ -20,6 +20,7 @@ Este directorio reúne la documentación versionada del trabajo. Una actividad p
 
 - [Estado inicial y alcance](01-estado-inicial.md).
 - [Plan de pruebas, trazabilidad, riesgos y modelo de calidad](02-plan-de-pruebas.md).
+- [Casos de prueba detallados](13-casos-de-prueba.md).
 - [Registro de defectos](03-defectos.md).
 - [Entorno, comandos y primeros resultados](04-entorno-de-pruebas.md).
 - [Contrato de integración y resultados de API/repositorio](05-contrato-y-resultados.md).
